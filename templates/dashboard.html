@@ -1,0 +1,556 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ user.username }} Profile {% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="width: 100%; padding: 0; margin: 0; font-family: 'Times New Roman', Times, serif;">
+  <div class="col-md-12">
+      <h1 class="aim" style="margin-top:20px;margin-left: 100px;">Welcome {{ user.username }}</h1>
+  <div class="col-md-2 sidebar" style="width: 230px; background-color: navy; padding: 10px; border-right: 1px solid #ddd; position: fixed; top: 70px; left: 0; display: none;height:995px; transition: display 0.5s;">
+    <ul style="position: fixed; width:230px; background-color: navy; padding: 0 10px; border-right: 1px solid #ddd;left: 0;top:70;">
+      <li><a onclick="location.href='{% url 'dashboard' %}'" class="btn btn-link"><i class="fas fa-home"></i><span>Home</span></a></li>
+      <li><a onclick="location.href='{% url 'leaderboard' %}'" class="btn btn-link"><i class="fas fa-trophy"></i><span>Leaderboard</span></a></li>
+      <li><a onclick="location.href='{% url 'user_list' %}'" class="btn btn-link"><i class="fas fa-user"></i><span>User List</span></a></li>
+      {% if user.is_superuser %}
+        <li><a onclick="location.href='{% url 'inbox' %}'" class="btn btn-link"><i class="fas fa-envelope"></i><span>E-Mail</span></a></li>
+        <li><a onclick="location.href='{% url 'admin:index' %}'" class="btn btn-link"><i class="fas fa-cog"></i><span>Admin Dashboard</span></a></li>
+      {% endif %}
+      <li style="padding-top: 15px;"><a onclick="location.href='{% url 'help' %}'" class="btn btn-link"><i class="fas fa-question-circle"></i><span>Help</span></a></li>
+      <li><a onclick="location.href='{% url 'logout' %}'" class="btn btn-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
+    </ul>
+  </div>
+  <div class="main-content" style="width: 1000px; margin-left: 150px; padding: 0; margin-top: 0;">
+    <div class="row">
+      <div class="profile-picture" style="margin-right: 90px; margin-top: 30px; margin-bottom: 30px; padding-left: 170px; width: 120px;">
+        <img src="{% if user.profile.profile_picture %}{{ user.profile.profile_picture.url }}{% else %}{% static 'home/default-img.jpg' %}{% endif %}" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+      </div>
+
+      <div class="user-info" style="margin-right: 100px;margin-top: 30px;margin-bottom: 30px;">
+        <p style="font-size: 15px;font-weight: 700;padding-left: 50px;">Name: {{ user.first_name }} {{ user.last_name }}</p>
+        <p style="font-size: 15px;font-weight: 700;padding-left: 50px;">Email: {{ user.email }}</p>
+        <p style="font-size: 15px;font-weight: 700;padding-left: 50px;">Biography|About my role and contributions: {{ user.About }}</p>
+      </div>
+      </div>
+      
+      <div class="main-content col-md-12" style="margin-left: 0px; padding: 0; margin-top: 0;">
+                  <div class="row" style="margin-right: 60px;">
+                      <div class="col-md-6">
+                          <!-- Left Side: Courses and Certifications -->
+                          <div class="container course-container">
+                              <h2 class="section-title">Courses Enrolled</h2>
+                              <div class="row" style="margin-left: 5px;">
+                                  {% if enrolled_courses %}
+                                      {% for course in enrolled_courses %}
+                                          {% if not course.course_completed_at %}
+                                              <div class="col-md-12 mb-3">
+                                                  <div class="card">
+                                                      <div class="card-body">
+                                                          <h5 class="card-title">{{ course.course.name }}</h5>
+                                                          <p class="card-text">{{ course.course.description }}</p>
+                                                          <div class="progress">
+                                                              <div class="progress-bar bg-orange" style="width: {{ course.course_progress }}%">
+                                                                  {{ course.course_progress }}%
+                                                              </div>
+                                                          </div>
+                                                          <p class="card-text">In Progress ({{ course.course_progress }}% complete)</p>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          {% endif %}
+                                      {% endfor %}
+                                  {% else %}
+                                      <p class="card-text" style="margin-left:3px;">No courses enrolled.</p>
+                                  {% endif %}
+                              </div>
+                          </div>
+      
+                          <!-- Certifications Container -->
+                          <div class="container certification-container my-4">
+                              <h2 class="section-title">Certifications Enrolled</h2>
+                              <div class="row"  style="margin-left: 5px;">
+                                  {% if user_certifications %}
+                                      {% for certification in user_certifications %}
+                                          {% if not certification.certification_completed_at %}
+                                              <div class="col-md-12 mb-3">
+                                                  <div class="card">
+                                                      <div class="card-body">
+                                                          <h5 class="card-title">{{ certification.certification.name }}</h5>
+                                                          <p class="card-text">{{ certification.certification.description }}</p>
+                                                          <div class="progress">
+                                                              <div class="progress-bar bg-blue" style="width: {{ certification.certification_progress }}%">
+                                                                  {{ certification.certification_progress }}%
+                                                              </div>
+                                                          </div>
+                                                          <p class="card-text">In Progress ({{ certification.certification_progress }}% complete)</p>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          {% endif %}
+                                      {% endfor %}
+                                  {% else %}
+                                      <p class="card-text" style="margin-left: 3px;">No certifications enrolled.</p>
+                                  {% endif %}
+                              </div>
+                              
+                          </div>
+                      </div>
+      
+                      <!-- Right Side: Achievements -->
+                      <div class="col-md-6">
+                          <div class="container completed-achievements-container">
+                              <h2 class="section-title">Achievements</h2>
+                              <div class="row"  style="margin-left: 5px;">
+                                  <div class="col-md-12">
+                                      <h3>Completed Courses</h3>
+                                      {% if enrolled_courses %}
+                                          {% for course in enrolled_courses %}
+                                              {% if course.course_completed_at %}
+                                                  <div class="card mb-3">
+                                                      <div class="card-body">
+                                                          <h5 class="card-title">{{ course.course.name }}</h5>
+                                                          <p class="card-text">{{ course.course.description }}</p>
+                                                          <p class="card-text">Completed on {{ course.course_completed_at }}</p>
+                                                      </div>
+                                                  </div>
+                                              {% endif %}
+                                          {% endfor %}
+                                      {% else %}
+                                          <p class="card-text"  style="margin-left: 3px;">No completed courses.</p>
+                                      {% endif %}
+                                  </div>
+                                  <div class="col-md-12">
+                                      <h3>Completed Certifications</h3>
+                                      {% if user_certifications %}
+                                          {% for certification in user_certifications %}
+                                              {% if certification.certification_completed_at %}
+                                                  <div class="card mb-3">
+                                                      <div class="card-body">
+                                                          <h5 class="card-title">{{ certification.certification.name }}</h5>
+                                                          <p class="card-text">{{ certification.certification.description }}</p>
+                                                          <p class="card-text">Completed on {{ certification.certification_completed_at }}</p>
+                                                      </div>
+                                                  </div>
+                                              {% endif %}
+                                          {% endfor %}
+                                      {% else %}
+                                          <p class="card-text"  style="margin-left: 3px;">No completed certifications.</p>
+                                      {% endif %}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+          
+      <style>
+      .card {
+        width: 100%;
+        margin: 20px auto;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .card-body {
+        padding: 20px;
+      }
+      
+      .card-title {
+        font-size: 25px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #333;
+      }
+      
+      .card-text {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #666;
+      }
+      
+      .progress {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #eee;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      
+      .progress-bar {
+        height: 20px;
+        font-size: 18px;
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 5px;
+        text-align: center;
+      }
+      
+      
+      .profile-container {
+        display: flex;
+        align-items: center;
+      }
+      
+      .profile-picture {
+        margin-right: 30px; 
+      }
+      
+      .profile-picture img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      
+      .progress-bar.bg-orange {
+        background-color: orangered;
+        font-size: 10px;
+        transition: width 0.5s ease-in-out;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        padding: 5px;
+        text-align: center;
+        color: #fff;
+      }
+      
+      .progress-bar.bg-blue {
+        background-color: navy;
+        font-size: 10px;
+        transition: width 0.5s ease-in-out;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        padding: 5px;
+        text-align: center;
+        color: #fff;
+      }
+      
+      .progress-bar.bg-orange:hover {
+        background-color: #fc9904;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      .progress-bar.bg-blue:hover {
+        background-color: #2b0bfc;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      .progress-bar.bg-orange:active {
+        background-color: #ff6600;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .progress-bar.bg-blue:active {
+        background-color: navy;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .progress {
+        height: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .progress-bar {
+        transition: width 0.5s ease-in-out;
+      }
+      .container-fluid {
+        padding: 20px;
+      }
+      
+      
+      .sidebar {
+        position: fixed;
+        margin-top: 0%;
+        width: 200px;
+        padding: 40px;
+        border-right: 1px solid #ddd;
+        background-color: navy;
+        color: white;
+      }
+      
+      .sidebar ul li {
+        color: white;
+        padding: 15px;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        background-color: navy;
+      }
+      
+      .sidebar ul li a {
+        font-weight: 500;
+        padding: 5px;
+        display: block;
+        text-transform: capitalize;
+        text-decoration: none;
+        font-size: 16px;
+        background-color: navy;
+      }
+      
+      .sidebar ul li a i {
+        color: white;
+        width: 40px;
+        text-align: center;
+       
+      }
+      
+      .sidebar ul li:hover {
+        background:#ddd;
+        color:white;
+      }
+      
+      .sidebar ul li:hover a {
+        background-color:navy;
+        color: white;
+      }
+      
+      .popup-notification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #333!important;
+        color: #fff!important;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)!important;
+      }
+      
+      .popup-notification p {
+        margin-bottom: 10px;
+      }
+      
+      button[type="submit"] {
+        background-color: #0c89f6!important;
+        color: #fff!important;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        padding-left: 50px;
+        padding-right: 50px;
+        margin-left: 260px;
+        flex: 0 0 40px;
+      }
+      
+      button[type="submit"]:hover {
+        background-color: #2970ae!important;
+        flex: 0 0 50%;
+      }
+      
+      .btn-primary {
+        background-color: #0584f4!important;
+        color: #fff!important;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 15px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        flex: 0 0 50%;
+        
+      }
+      
+      .btn-primary:hover {
+        background-color:  #2970ae!important;
+        flex: 0 0 50%;
+      }
+      .update-btn {
+        background-color: #337ab7;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+      }
+      
+      .update-btn:hover {
+        background-color: #23527c;
+        color: #fff;
+      }
+      
+      .profile-picture img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .user-info {
+        flex: 1;
+      }
+      
+      
+      @media (max-width: 768px) {
+        .col-md-12 {
+          flex-direction: column;
+        }
+        .profile-picture {
+          margin-right: 0;
+          margin-bottom: 20px;
+          width: 50px;
+          height: 50px;
+        }
+        .user-info {
+          flex: 0;
+        }
+      }
+      
+              .container {
+                  max-width: 800px;
+                  margin: 0 auto;
+                  padding-left: 180px;
+      
+              }
+      
+              .profile {
+                  text-align: center;
+                  margin-bottom: 30px;
+              }
+      
+              .profile img {
+                  width: 150px;
+                  height: 150px;
+                  border-radius: 50%;
+                  object-fit: cover;
+              }
+      
+              .section-title {
+              font-size: 30px;
+              font-weight: 900;
+              color: navy;
+              margin-bottom: 20px;
+              border-bottom: 2px solid navy;
+              padding-bottom: 10px; 
+          }
+      
+          .card {
+              border-radius: 8px;
+          }
+          .progress {
+              height: 20px; 
+              border-radius: 5px;
+          }
+      
+          .bg-orange {
+              background-color: #ff9800; 
+          }
+      
+          .bg-blue {
+              background-color: #2196f3;
+          }
+      
+          @media (max-width: 768px) {
+              .col-md-8, .col-md-4 {
+                  padding: 0 10px; 
+              }
+          }
+      
+              .course-list, .cert-list {
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                  gap: 20px;
+              }
+      
+              .course-item, .cert-item {
+                  border: 1px solid #ddd;
+                  padding: 20px;
+                  border-radius: 5px;
+              }
+      
+              .progress {
+                  height: 10px;
+                  background-color: #eee;
+                  border-radius: 5px;
+                  overflow: hidden;
+              }
+      
+              .progress-bar {
+                  height: 100%;
+                  background-color: #007bff;
+                  width: 0%; /* Initial width */
+                  transition: width 0.5s ease-in-out;
+              }
+      .aim {
+        font-size: 36px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: 700;
+        margin-right: 40px;
+        margin-top: 50px;
+      }
+      .floating-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: navy; 
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        padding: 10px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+                
+        .floating-button:hover {
+        background-color:orangered;
+        }
+                
+        .floating-button i {
+        font-size: 18px; 
+        color: #FFFFFF; 
+        }
+      </style>
+      
+      <button type="button" class="btn btn-link" id="sidebar-toggle" style="position: fixed; top: 60px; left: 10px; z-index: 1000; font-size: 18px; padding: 10px 15px; border: none; background-color: navy; color: #fff; cursor: pointer;">
+        <i class="fas fa-bars" style="font-size: 18px;"></i>
+      </button>
+      <a href="{% url 'floating_button_view' %}" class="floating-button"></a>
+      <script>
+        $(document).ready(function() {
+          var $floatingButton = $('.floating-button');
+          var $window = $(window);
+          var isDragging = false;
+          var offsetX, offsetY;
+          
+          $floatingButton.on('mousedown', function(event) {
+            isDragging = true;
+            offsetX = event.clientX - $floatingButton.offset().left;
+            offsetY = event.clientY - $floatingButton.offset().top;
+          });
+          
+          $window.on('mousemove', function(event) {
+            if (isDragging) {
+              $floatingButton.css({
+                'left': event.clientX - offsetX,
+                'top': event.clientY - offsetY
+              });
+            }
+          });
+          
+          $window.on('mouseup', function() {
+            isDragging = false;
+          });
+          
+          $floatingButton.on('click', function() {
+            window.location.href = '{% url "bingo" %}';
+          });
+        });
+      </script>
+      <div class="floating-button">
+        <i class="fas fa-dice"></i>
+      </div>
+      
+      <script>
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+          document.querySelector('.sidebar').style.display = document.querySelector('.sidebar').style.display === 'block' ? 'none' : 'block';
+        });
+      </script>
+      {% endblock %}

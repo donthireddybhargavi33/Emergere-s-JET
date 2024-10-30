@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Your existing styles remain unchanged */
+  body {
+      font-family: 'Poppins', sans-serif; 
+      margin: 0;
+      padding: 0;
+      background-color: #121212; 
+      color: #e0e0e0; 
+  }
+  
+  .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 15px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
+
+  .header {
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px 10px ;
+      position: relative; /* Added for positioning the leaderboard button */
+  }
+
+  .header h1 {
+      margin: 0;
+      font-size: 38px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color:white; 
+      font-weight: 800;
+  }
+
+  /* Leaderboard button styles */
+  .leaderboard-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background-color: navy;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+  }
+
+  .leaderboard-button:hover {
+      background-color: orangered;
+  }
+
+  /* Game display styles */
+  .games {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+  }
+
+  .game {
+      background-color: navy;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+  }
+
+  .game:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .game img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      transform: rotatex(90deg);
+      transform-origin: top center;
+  }
+
+  .game:hover img {
+      transform: rotatex(0deg);
+  }
+
+  .game-info {
+      padding: 10px;
+      text-align: center;
+  }
+  
+  .game-info h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: orangered; 
+  }
+  
+  .game-info p {
+      margin: 5px 0;
+      font-size: 12px;
+      color:rgb(217, 213, 213);
+  }
+  
+  .game-info a {
+      display: inline-block;
+      padding: 8px 12px;
+      background-color: navy;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+  }
+  
+  .game-info a:hover {
+      background-color: orangered; 
+  }
+
+  .back-button {
+      position: fixed;
+      top: 30px;
+      left: 5px;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 40px;
+  }
+  
+  .back-button::before {
+      content: "";
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+      background-size: 24px 24px;
+      background-position: center;
+      background-repeat : no-repeat;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      margin-right: 10px;
+  }
+  
+  .back-button:hover::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4. 58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E %3C/svg%3E");
+  }
+</style>
+
+<a class="back-button" onclick="location.href='{% url 'dashboard' %}'"></a>
+<div class="container">
+  <div class="header">
+      <h1>Game Hub</h1> <!-- Closed the h1 tag -->
+      <a class="leaderboard-button" href="{% url 'leaderboard1' %}">Leaderboard</a> <!-- New Leaderboard Button -->
+  </div>
+  <div class="games" id="gamesGrid">
+      <div class="game">
+          <img src="{% static 'games/towersofhanoi.jpg' %}" alt="Tower of Hanoi">
+          <div class="game-info">
+              <h2>Tower of hanoi</h2>
+              <p>Play as towerofhanoi and use your brain!</p>
+              <a href="{% url 'towersofhanoi' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/snake.jpg' %}" alt="Snake">
+          <div class="game-info">
+              <h2>Snake</h2>
+              <p>Classic snake game, eat and grow!</p>
+              <a href="{% url 'snake' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/hangman.jpg' %}" alt="Hangman">
+          <div class="game-info">
+              <h2>Hangman</h2>
+              <p>Guess the word correctly!</p>
+              <a href="{% url 'hangman' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/sudoku.jpg' %}" alt="Sudoku">
+          <div class="game-info">
+              <h2>Sudoku</h2>
+              <p>Challenge your mind!</p>
+              <a href="{% url 'sudoku' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/chess.jpg' %}" alt="Chess">
+          <div class="game-info">
+              <h2>Chess</h2>
+              <p>Can you find the Logic?</p>
+              <a href="{% url 'chess' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/memory.jpg' %}" alt="Math Cards">
+          <div class="game-info">
+              <h2>Match Cards</h2>
+              <p>Test your math skills!</p>
+              <a href="{% url 'memory' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/quiz.jpg' %}" alt="Quiz Time">
+          <div class="game-info">
+              <h2>Quiz Time</h2>
+              <p>How many questions can you answer?</p>
+              <a href="{% url 'quiz' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/Mathsprint.jpg' %}" alt="Math Sprint">
+          <div class="game-info">
+              <h2>Math Sprint</h2>
+              <p>Challenge an AI!</p>
+              <a href="{% url 'mathsprint' %}">Play Now!</a>
+          </div>
+      </div>
+      <div class="game">
+          <img src="{% static 'games/number.jpg' %}" alt="Guess the Word">
+          <div class="game-info">
+              <h2>Guess the Word</h2>
+              <p>Can you guess the right word?</p>
+              <a href="{% url 'guess' %}">Play Now!</a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  const MAX_GAMES = 3; // Set the maximum number of games per user
+  const TIME_LIMIT = 9 * 60 * 60 * 1000; // 14 hours in milliseconds
+  const userId = '{{ request.user.id }}'; // Get the current user's ID
+  const gameStartKeyPrefix = 'gameStartTime_';
+  const gameCountKeyPrefix = 'gameCount_';
+
+  // Get user-specific game start time and count
+  let gameStartTime = localStorage.getItem(gameStartKeyPrefix + userId);
+  let gameCount = parseInt(localStorage.getItem(gameCountKeyPrefix + userId)) || 0;
+
+  function resetDailyGameData() {
+    const today = new Date().toISOString().slice(0, 10);
+    const lastPlayedDate = localStorage.getItem('lastPlayedDate_' + userId);
+
+    if (lastPlayedDate !== today) {
+      localStorage.removeItem(gameCountKeyPrefix + userId);
+      localStorage.removeItem(gameStartKeyPrefix + userId);
+      gameCount = 0; // Reset game count
+      localStorage.setItem('lastPlayedDate_' + userId, today);
+    }
+  }
+
+  resetDailyGameData();
+
+  function playGame(gameUrl) {
+    if (gameCount < MAX_GAMES) {
+      if (!gameStartTime) {
+        gameStartTime = new Date().getTime();
+        localStorage.setItem(gameStartKeyPrefix + userId, gameStartTime);
+      } else {
+        const currentTime = new Date().getTime();
+        if (currentTime - gameStartTime > TIME_LIMIT) {
+          alert('Your 9-hour playtime limit has expired. Please try again tomorrow.');
+          return;
+        }
+      }
+
+      gameCount++;
+      localStorage.setItem(gameCountKeyPrefix + userId, gameCount);
+
+      window.location.href = gameUrl;
+    } else {
+      alert('You can only play a maximum of 3 games in a single day.');
+    }
+  }
+
+  document.querySelectorAll('.game-info a').forEach(link => {
+    const gameUrl = link.getAttribute('href');
+    link.addEventListener('click', (event) => {
+      event.preventDefault(); // Prevent default link behavior
+      playGame(gameUrl); // Call the playGame function
+    });
+  });
+
+  // Shuffle game elements
+  const gamesGrid = document.getElementById('gamesGrid');
+  const games = Array.from(gamesGrid.children);
+  games.sort(() => Math.random() - 0.5);
+  games.forEach(game => gamesGrid.appendChild(game)); // Append in random order
+</script>
+{% endblock %}

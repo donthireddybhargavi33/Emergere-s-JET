@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Reply Emails{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+  <a class="back-button" onclick="location.href='{% url 'inbox' %}'"></a>
+  <h1>Reply Emails</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Original Email Subject</th>
+        <th>Reply Email Subject</th>
+        <th>Sender</th>
+        <th>Reply Email</th>
+        <th>Sent At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for email in reply_emails %}
+        <tr>
+          <td>{{ email.replied_to.subject }}</td>
+          <td>{{ email.subject }}</td>
+          <td>{{ email.sender.username }}</td>
+          <td>{{ email.message }}</td>
+          <td>{{ email.created_at }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No reply emails found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  
+  .container-fluid {
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #337ab7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    text-align: left;
+    background-color: #f0f0f0;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+  
+  .thead-dark {
+    background-color: #337ab7;
+    color: #fff;
+  }
+  
+  .thead-dark th {
+    border-color: #337ab7;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  .table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mt-5 {
+    margin-top: 50px;
+  }
+  
+  .mb-5 {
+    margin-bottom: 50px;
+  }
+  
+  .offset-md-1 {
+    margin-left: 8.333333%;
+  }
+  .back-button {
+    position: fixed;
+    top: 30px;
+    left: 5px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top:40px;
+  }
+  
+  .back-button::before {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+    background-size: 24px 24px;
+    background-position: center;
+    background-repeat : no-repeat;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .back-button:hover::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+  }
+</style>
+
+{% endblock %}

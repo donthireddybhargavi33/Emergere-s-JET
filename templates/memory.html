@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Cards Game</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<style>
+body {
+    min-height: 100vh;
+    background-color: #ddd;
+    color: navy;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p {
+    margin: 10px 0; 
+    font-size: 30px; 
+}
+
+.score, .level {
+    font-weight: bold; 
+    color: #007bff; 
+}
+
+.timer {
+    font-size: 30px; 
+    color: #dc3545;
+}
+
+.actions {
+    margin-top: 20px; 
+}
+
+button {
+    background-color: navy;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: orangered;
+    transform: scale(1.05);
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+}
+
+.grid-container {
+    display: grid;
+    gap: 10px;
+    margin: 20px;
+}
+
+.card {
+    height: 300px;
+    width: 300px;
+    border-radius: 10px;
+    background-color: #fff;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    backface-visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.front {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.back {
+    background-color: #27ae60;
+    transform: rotateY(180deg);
+}
+
+.card-container {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.back-button {
+    position: fixed;
+    top: 30px;
+    left: 5px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 40px;
+}
+
+.back-button::before {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+    background-size: 24px 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.back-button:hover::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+
+#instructionsModal {
+    display: flex;  /* Use flex to center the modal content */
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1001; /* Make sure it sits on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;  /* Center the modal */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    text-align: left; /* Keep alignment left */
+}
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+<body>
+    <a class="back-button" onclick="location.href='{% url 'bingo' %}'"></a>
+    <h1>Match Cards Game</h1>
+    <div class="grid-container"></div>
+    <p>Score: <span class="score">0</span></p>
+    <p>Level: <span class="level">1</span></p>
+    <p class="timer">Time: 120s</p>
+    <div class="actions">
+        <button onclick="startGame()">Restart</button>
+        <button onclick="restart()">Start Game</button>
+    </div>
+    <div id="memory-game" class="card-container">
+        <!-- Cards will be generated dynamically here -->
+    </div>
+
+    <div id="instructionsModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 style="color:navy">Match Cards Game Instructions</h2>
+            <ol style="color:black">
+                <li>Click on two cards to flip them over.</li>
+                <li>If the cards match, they will stay flipped.</li>
+                <li>If they do not match, they will flip back after a short delay.</li>
+                <li>Try to match all pairs before the time runs out!</li>
+                <li>Complete levels to increase difficulty and score.</li>
+                <li>Click "Restart" to play again or "Start Game" to begin.</li>
+            </ol>
+            <button id="startGameButton">OK</button>
+        </div>
+    </div>
+
+<script>
+let cards = [];
+let firstCard, secondCard;
+let lockBoard = false;
+let score = 0;
+let level = 1;
+let time; // Variable to store the time for each level
+let timerInterval;
+const gridContainer = document.querySelector(".grid-container");
+
+const cardImages = [
+    "🔧", "⚙️", "💻", "🖥️", "🖨️",
+    "📡", "🧬", "📊", "📈", "📉",
+    "🖱️", "🕹️", "🔌", "📱", "🛰️",
+    "🖱️", "⌨️", "🔒", "🗄️", "🗃️",
+    "💽", "🧰", "📂", "🗄️", "🖥️"
+];
+
+// Function to render the cards
+// Call renderCards to display the cards on page load
+function renderCards() {
+renderCards();
+}
+
+function setTimer() {
+    // Time is 2 minutes (120 seconds) for level 1 and increases by 30 seconds for each level
+    time = 120 + (level - 1) * 30; // 2, 2.5, 3, 3.5, 4, 4.5, and 5 minutes
+    document.querySelector(".timer").textContent = `Time: ${time}s`; // Use backticks for template literal
+}
+
+// Function to start a countdown timer
+function startTimer() {
+    clearInterval(timerInterval);
+    setTimer(); // Set the timer based on the level
+
+    timerInterval = setInterval(() => {
+        time--;
+        document.querySelector(".timer").textContent = `Time: ${time}s`; // Use backticks for template literal
+
+        if (time <= 0) {
+            clearInterval(timerInterval);
+            alert("Time's up! Game Over.");
+            restart();
+        }
+    }, 1000);
+}
+
+function generateCards(numPairs) {
+    cards = [];
+    // Select random emojis from the cardImages array
+    let selectedImages = [];
+    
+    // Ensure we have unique pairs for this level
+    for (let i = 0; i < numPairs; i++) {
+        // Get a random emoji from the available emojis, ensuring no duplication
+        let randomIndex = Math.floor(Math.random() * cardImages.length);
+        selectedImages.push(cardImages[randomIndex]);
+    }
+
+    selectedImages = [...selectedImages, ...selectedImages]; // Create pairs
+    shuffleCards(selectedImages);
+}
+
+function shuffleCards(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    cards = array;
+}
+
+function createCardElement(cardValue) {
+    const cardElement = document.createElement("div");
+    cardElement.classList.add("card");
+    cardElement.setAttribute("data-name", cardValue);
+    cardElement.innerHTML = `
+        <div class="front"></div>
+        <div class="back"></div>
+    `;
+    cardElement.addEventListener("click", () => flipCard(cardElement, cardValue));
+    return cardElement;
+}
+
+function flipCard(cardElement, cardValue) {
+    if (lockBoard || cardElement === firstCard) return;
+
+    cardElement.classList.add("flipped");
+    cardElement.querySelector('.front').textContent = cardValue; // Reveal emoji on the card
+
+    if (!firstCard) {
+        firstCard = cardElement;
+        return;
+    }
+
+    secondCard = cardElement;
+    lockBoard = true;
+
+    checkForMatch();
+}
+
+function checkForMatch() {
+    let isMatch = firstCard.dataset.name === secondCard.dataset.name;
+
+    if (isMatch) {
+        score += 10; // Add points for a correct match
+        updateScore();
+        disableCards();
+    } else {
+        // No match, just reset
+        unflipCards();
+    }
+}
+
+function updateScore() {
+    document.querySelector(".score").textContent = score;
+}
+
+function disableCards() {
+    firstCard.removeEventListener("click", () => flipCard(firstCard));
+    secondCard.removeEventListener("click", () => flipCard(secondCard));
+    resetBoard();
+
+    if (document.querySelectorAll(".card:not(.flipped)").length === 0) {
+        clearInterval(timerInterval); // Stop timer
+        alert(`Congrats! You've completed level ${level}! Your score is ${score}.`);
+        if (confirm("Do you want to go to the next level?")) {
+            nextLevel();
+        } else {
+            restart(); // Restart if the user does not want to continue
+        }
+    }
+}
+
+function unflipCards() {
+    setTimeout(() => {
+        firstCard.classList.remove("flipped");
+        firstCard.querySelector('.front').textContent = ""; // Clear emoji
+        secondCard.classList.remove("flipped");
+        secondCard.querySelector('.front').textContent = ""; // Clear emoji
+        resetBoard();
+    }, 1000);
+}
+
+function resetBoard() {
+    [firstCard, secondCard, lockBoard] = [null, null, false];
+}
+
+function nextLevel() {
+    level++;
+    
+    // Update number of pairs based on the level:
+    let numPairs = 8; // Starting with 8 pairs for level 1
+    if (level === 2) {
+        numPairs = 12; // Level 2: 12 pairs
+    } else if (level === 3) {
+        numPairs = 16; // Level 3: 16 pairs
+    } else if (level === 4) {
+        numPairs = 18; // Level 4: 18 pairs
+    } else if (level >= 5) {
+        numPairs = 20; // Level 5: 20 pairs
+    }
+
+    document.querySelector(".level").textContent = level;
+    
+    startGame(numPairs); // Start next level with updated pairs
+}
+
+function startGame(numPairs) {
+    gridContainer.innerHTML = ""; // Clears the grid container for a new game
+    generateCards(numPairs); // Function to generate card values
+
+    // Set the grid layout based on the number of cards
+    const numCards = cards.length;
+    const gridSize = Math.sqrt(numCards); // Calculate the number of columns
+    gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`; // Use backticks for template literal
+
+    for (let cardValue of cards) {
+        const cardElement = createCardElement(cardValue); // Create card elements
+        gridContainer.appendChild(cardElement); // Append the card to the grid container
+    }
+
+    score = 0; // Reset score
+    updateScore(); // Update score display
+
+    startTimer(); // Start the timer for the level
+}
+
+// Restart function to reset to the initial state
+function restart() {
+    score = 0; // Reset score
+    level = 1; // Reset level
+    document.querySelector(".level").textContent = level; // Update level display
+    document.querySelector(".timer").textContent = "Time: 120s"; // Reset timer display
+    startGame(8); // Start the game with 8 pairs for level 1
+}
+
+// Ensure the DOM is fully loaded before executing the scripts
+document.addEventListener("DOMContentLoaded", function() {
+    // Function to show the instructions modal
+    function showInstructions() {
+        document.getElementById("instructionsModal").style.display = "block";
+    }
+
+    // Close the modal
+    document.getElementById("closeModal").onclick = function() {
+        document.getElementById("instructionsModal").style.display = "none";
+    }
+
+    // Start game when 'OK' button is clicked
+    document.getElementById("startGameButton").onclick = function() {
+        document.getElementById("instructionsModal").style.display = "none";
+        startGame(8); // Start the game
+    }
+
+    // Show instructions on page load
+    showInstructions();
+});
+</script>
+</body>
+</html>

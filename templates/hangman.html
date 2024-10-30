@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <style>
+        /* CSS styles */
+        #new-game-button {
+            margin: 20px auto;
+            padding: 0.5em 1em;
+            font-size: 1.25em;
+            background-color: #8c52ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.3em;
+            cursor: pointer;
+            display: block; /* Make it block to align at the center */
+        }
+        .container {
+            font-size: 16px;
+            background-color: #ffffff;
+            width: 90vw;
+            max-width: 34em;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            padding: 3em;
+            border-radius: 0.6em;
+            box-shadow: 0 1.2em 2.4em rgba(111, 85, 0, 0.25);
+        }
+        #options-container {
+            text-align: center;
+        }
+        #options-container div {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin: 1.2em 0 2.4em 0;
+        }
+        #options-container button {
+            padding: 0.6em 1.2em;
+            border: 3px solid #000000;
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 0.3em;
+            text-transform: capitalize;
+            cursor: pointer;
+        }
+        #options-container button:disabled {
+            border: 3px solid #808080;
+            color: #808080;
+            background-color: #efefef;
+        }
+        .letter-container {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6em;
+        }
+        #letter-container button {
+            height: 2.4em;
+            width: 2.4em;
+            border-radius: 0.3em;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        .new-game-popup {
+            background-color: #ffffff;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-radius: 0.6em;
+        }
+        #user-input-section {
+            display: flex;
+            justify-content: center;
+            font-size: 1.8em;
+            margin: 0.6em 0 1.2em 0;
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            border: 10px solid #8c52ff;
+            border-radius: 10px;
+        }
+        .hide {
+            display: none;
+        }
+        #result-text h2 {
+            font-size: 1.8em;
+            text-align: center;
+        }
+        #result-text p {
+            font-size: 1.25em;
+            margin: 1em 0 2em 0;
+        }
+        #result-text span {
+            font-weight: 600;
+        }
+        .win-msg {
+            color: #39d78d;
+        }
+        .lose-msg {
+            color: #fe5152;
+        }
+        #instructions-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7); /* Black with opacity */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            color: navy;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 45%;
+            text-align: left;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: red;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #start-game-btn {
+            background-color: navy;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #start-game-btn:hover {
+            background-color: orangered;
+        }
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 5px;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 40px;
+        }
+
+        .back-button::before {
+            content: "";
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+            background-size: 24px 24px;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .back-button:hover::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <a class="back-button" onclick="location.href='{% url 'bingo' %}'"></a>
+    <button id="new-game-button" class="hide">New Game</button>
+    
+    <div class="container">
+        <div id="options-container"></div>
+        <div id="letter-container" class="letter-container hide"></div>
+        <div id="user-input-section"></div>
+        <canvas id="canvas"></canvas>
+        <div id="new-game-container" class="new-game-popup hide">
+            <div id="result-text"></div>
+        </div>
+    </div>
+    <!-- Add a new div for the instructions popup -->
+    <div id="instructions-modal">
+        <div class="modal-content">
+            <span class="close" id="close-instructions">&times;</span>
+    <h2>Hangman Game Instructions</h2>
+    <ol>
+        <li>The game will randomly select a word from a list of words.</li>
+        <li>You will have to guess the word by suggesting letters.</li>
+        <li>For each letter you guess correctly, the corresponding blanks will be filled.</li>
+        <li>For each letter you guess incorrectly, a part of the hangman's gallows will be drawn.</li>
+        <li>If you guess the word correctly before the gallows is complete, you win!</li>
+        <li>If the gallows is complete before you guess the word, you lose.</li>
+        <li>You can use the "Hint" button to reveal a random letter in the word.</li>
+        <li>After completing each level, you will be prompted to proceed to the next level or quit the game.</li>
+    </ol>
+    <button id="start-game-button">OK</button>
+</div>
+    </div>
+    <script>
+        const letterContainer = document.getElementById("letter-container");
+        const optionsContainer = document.getElementById("options-container");
+        const userInputSection = document.getElementById("user-input-section");
+        const newGameContainer = document.getElementById("new-game-container");
+        const newGameButton = document.getElementById("new-game-button");
+        const canvas = document.getElementById("canvas");
+        const resultText = document.getElementById("result-text");
+
+        // Options for words based on level
+        const options = {
+            level1: ["Apple", "Bread", "Chair", "Dance", "Eagle", "Front", "Grace", "House", "Ideal", "Joint", "Lemon", "Maple", "Night", "Olive", "Place", "Quiet", "Racer", "Smile", "Table", "Unite", "Vivid", "Water", "Xylem", "Yield", "Zebra", "Aisle", "Blaze", "Clown", "Dream", "Earth", "Flame", "Grape", "Honey", "Ivory", "Jolly", "Knack", "Latch", "Mouse", "Nervy", "Oasis", "Peach", "Rally", "Sauce", "Tacky", "Usher", "Vigor", "Woven", "Yacht", "Zesty", "Abide", "Crust", "Flute", "Gloom", "Hasty", "Inner", "Jumpy", "Kinky", "Livid", "Modal", "Nifty", "Orbit", "Prism", "Quest", "Riot", "Shelf", "Tonic", "Unity", "Vowed", "Wired", "Xenon", "Yearn", "Zappy", "Agile", "Bongo", "Caddy", "Drank", "Entry", "Forge", "Guile", "Humor", "Inky", "Jiffy", "Kneed", "Leafy", "Molar", "Needy", "Overt", "Piano", "Quirk", "Rinse", "Skirt", "Taffy", "Usage", "Viage", "Wryly", "Happy", "Pear", "Grape"],
+            level2: ["Banana", "Orange", "Cherry","Appeal", "Attempt", "Capture", "Cleansy", "Cleverly", "Comfort", "Creator", "Delight", "Delivery", "Despite", "Elevate", "Endless", "Fiction", "Flexible", "Freedom", "Greeting", "Happens", "Honesty", "Impact", "Journey", "Justice", "Library", "Living", "Manage", "Miracle", "Movement", "Neighbor", "Overcome", "Patient", "Position", "Popular", "Precise", "Promise", "Protect", "Raising", "Relaxed", "Research", "Sliding", "Strategy", "Survive", "Support", "Surplus", "Tension", "Theater", "Success", "Surprise", "Twinkle", "Valuable", "Victory", "Wistful", "Abandon", "Awkward", "Between", "Cautious", "Dazzled", "Distant", "Everyone", "Explode", "Fascial", "Football", "Gathering", "Heavily", "Inspire", "Involved", "Journey", "Languid", "Lasting", "Loyalty", "Medical", "Mythical", "Natural", "Obvious", "Optimal", "Overheat", "Patient", "Physical", "Predict", "Quality", "Rapidly", "Reality", "Reading", "Reclaim", "Refusal", "Rejected", "Replant", "Relating", "Relaxed", "Repaired", "Remark", "Scattered", "Respect", "Secretly", "Stable", "Survive", "Teasing", "Tolerant", "Unchanged", "Various"],
+            level3: ["Pineapple", "Blueberry","Activity", "Adventure", "Alignment", "Alligator", "Alphanumeric", "Alternative", "Cautioned", "Cherished", "Confidence", "Contagion", "Contract", "Culinary", "Democratic", "Dictionary", "Discovery", "Distraction", "Education", "Employment", "Especially", "Essential", "Exhilarate", "Expedition", "Friendship", "Guidelines", "Handsome", "Happiness", "Household", "Imagination", "Independent", "Influence", "Intelligent", "Justified", "Management", "Meditation", "Motivation", "Negotiated", "Observation", "Optimization", "Participation", "Penetrate", "Perception", "Presentation", "Prioritize", "Proficiency", "Proposals", "Protection", "Questioned", "Relationship", "Remarkable", "Representation", "Satisfaction", "Sensitivity", "Simplified", "Surrender", "Technology", "Transformation", "Treatment", "Understanding", "Abdominal", "Abolition", "Absolute", "Allegiance", "Applauded", "Background", "Belligerent", "Celebrate", "Characteristics", "Confidence", "Correction", "Culminate", "Deflation", "Destination", "Discipline", "Environment", "Establishment", "Examination", "Fantastic", "Generosity", "Historical", "Inspiration", "Instructor", "Intuition", "Literature", "Manifesto", "Mastermind", "Negotiator", "Occupation", "Performance", "Persuasion", "Prevention", "Presentation", "Reflection", "Reputation", "Significant", "Spaghetti", "Spontaneous", "Transitional", "Unstoppable", "Vulnerability", "Willingness"],
+            level4: ["Pomegranate", "Watermelon","Abandonment", "Achievement", "Advantageous", "Astonishing", "Backgrounds", "Breathtaking", "Celebration", "Childbearing", "Collaborate", "Conceivable", "Constitution", "Considerate", "Conversations", "Determining", "Disagreement", "Discipline", "Discovered", "Embarrassed", "Environment", "Establishment", "Expectation", "Experiences", "Extraordinary", "Fascinating", "Generational", "Illustration", "Inconvenient", "Inspiration", "Intelligence", "Journalists", "Laboratories", "Legislation", "Lifeguarding", "Mathematician", "Motivational", "Occasionally", "Organization", "Perpendicular", "Personality", "Philanthropy", "Preservation", "Procrastinate", "Proportionate", "Quarantine", "Recollection", "Relationships", "Representation", "Replacement", "Retrievable", "Satisfaction", "Temperature", "Television", "Translators", "Transportation", "Unbelievable", "Vulnerable", "Abominating", "Abridgement", "Accusations", "Befriending", "Celebrations", "Circumstance", "Classifying", "Complicated", "Compromise", "Contributed", "Consultation", "Coordinate", "Deteriorate", "Developments", "Disappointed", "Disturbance", "Distraction", "Encouraging", "Establishment", "Familiarized", "Fundamental", "Illuminated", "Intolerance", "Investigate", "Letterheads", "Loyalty", "Mandatory", "Negotiation", "Occupational", "Outperforming", "Overlapping", "Participation", "Perpendicular", "Reassurances", "Rehabilitate", "Revolution", "Satisfaction", "Signed", "Tolerances", "Unbelieving", "Understanding", "Unprecedented", "Valuable", "Well-informed", "Wheelbarrow", "Worthwhile"],
+            level5: ["Rhinoceros", "Psychoanalysis","Absenteeism", "Accidental", "Astonishment", "Beneficiary", "Childbearing", "Collaboration", "Complicated", "Concentration", "Constitutional", "Dehydration", "Determination", "Disadvantage", "Disappointment", "Disinfectant", "Embarrassing", "Encouragement", "Environmental", "Exaggeration", "Excommunication", "Expectation", "Extraordinar", "Industrialism", "Information", "Instrumentation", "Intellectuals", "International", "Manipulation", "Negligent", "Overachievers", "Perpendicular", "Persuasion", "Personality", "Photographing", "Preservation", "Professional", "Procrastinate", "Refrigeration", "Relationship", "Representational", "Substantially", "Superintendent", "Sustainability", "Understanding", "Uncompromising", "Unsophisticated", "Apprehensively", "Counterproductive", "Disproportionate", "Establishment", "Fundamentalism", "Individualism", "Intimidation", "Investigation", "Irresponsible", "Misunderstand", "Nonchalantly", "Personification", "Resuscitation", "Schizophrenia", "Telecommunication", "Transcendental", "Uncontrollable", "Assignments", "Centrifugation", "Circumference", "Constituently", "Disenfranchised", "Experiential", "Incomprehensible", "Misinterpretation", "Philanthropical", "Postmodernism", "Proportionality", "Questionable", "Rehabilitation", "Statistically", "Transcontinental", "Uncharacteristic", "Uncontested", "Accommodating", "Antiestablishment", "Characterization", "Congressional", "Disparagement", "Incompatibility", "Interdependence", "Manipulations", "Predisposition", "Reconciliation", "Satisfaction", "Unquestionably", "Undiscovered", "Underestimated", "Accompaniment", "Affirmatively", "Confrontation"],
+        };
+
+        // Game state variables
+        let currentLevel = 1;
+        let winCount = 0;
+        let wrongCount = 0;
+        let chosenWord = "";
+        let revealedIndices = [];
+        let guessedLetters = new Set();
+        let hintUsed = false; // Variable to track if hint was used for the current level
+        
+        const startGame = () => {
+            hintUsed = false;  // Reset hint usage for each level
+            generateWord(`level${currentLevel}`); // Correctly using template literals
+            resetCanvas(); // Assuming this resets the game canvas
+        };
+
+        const generateWord = (level) => {
+            const optionArray = options[level];
+            chosenWord = optionArray[Math.floor(Math.random() * optionArray.length)].toUpperCase();
+            revealedIndices = [];
+            guessedLetters.clear();
+
+            userInputSection.innerHTML = chosenWord.replace(/./g, '<span class="dashes">_</span>');
+            letterContainer.classList.remove("hide");
+            letterContainer.innerHTML = "";
+
+            initializeLetterButtons();
+            initializeHintButton();
+        };
+
+        const initializeLetterButtons = () => {
+            for (let i = 65; i < 91; i++) {
+                const button = document.createElement("button");
+                button.classList.add("letters");
+                button.innerText = String.fromCharCode(i);
+                button.addEventListener("click", () => handleLetterGuess(button));
+                letterContainer.appendChild(button);
+            }
+        };
+
+        const handleLetterGuess = (button) => {
+            guessedLetters.add(button.innerText);
+            const charArray = chosenWord.split("");
+            const dashes = document.getElementsByClassName("dashes");
+
+            if (charArray.includes(button.innerText)) {
+                charArray.forEach((char, index) => {
+                    if (char === button.innerText) {
+                        dashes[index].innerText = char;
+                        winCount += 1;
+                        if (winCount === charArray.length) {
+                            winLevel();
+                        }
+                    }
+                });
+            } else {
+                wrongCount += 1;
+                drawMan(wrongCount);
+                if (wrongCount === 6) {
+                    gameOver();
+                }
+            }
+            button.disabled = true;
+        };
+
+        const initializeHintButton = () => {
+            const hintButton = document.createElement("button");
+            hintButton.innerText = "Hint";
+            hintButton.onclick = revealLetter;
+            optionsContainer.appendChild(hintButton);
+        };
+
+        const revealLetter = () => {
+            if (hintUsed) {
+                alert("You have already used your hint for this level!");
+                return; // Exit if hint is already used
+            }
+            
+            let unrevealedLetters = [...chosenWord].filter((letter, index) => 
+                !revealedIndices.includes(letter) && !guessedLetters.has(letter)
+            );
+            
+            if (unrevealedLetters.length > 0) {
+                const letterToReveal = unrevealedLetters[Math.floor(Math.random() * unrevealedLetters.length)];
+                const revealIndex = chosenWord.indexOf(letterToReveal);
+                revealedIndices.push(letterToReveal);
+                guessedLetters.add(letterToReveal); // Mark the revealed hint letter as guessed
+                document.querySelectorAll('.dashes')[revealIndex].innerText = letterToReveal;
+                
+                hintUsed = true; // Mark hint as used for this level
+            } else {
+                alert("No unrevealed letters available for the hint!");
+            }
+        };
+
+        const winLevel = () => {
+            resultText.innerHTML = `<h2 class='win-msg'>You Win Level ${currentLevel}!!</h2>`;
+            blocker(); // Assuming this function handles blocking the game interaction
+  
+            if (currentLevel < 5) {
+                setTimeout(() => {
+                    if (confirm(`Congratulations! The word was "${chosenWord}". Do you want to proceed to Level ${currentLevel + 1}?`)) {
+                        currentLevel++;
+                        resetGame(); // Assuming this resets the game state for the next level
+                    } else {
+                        newGameContainer.classList.remove("hide"); // Show the option to start a new game
+                    }
+                }, 2000);
+            } else {
+                resultText.innerHTML += `<p>Congratulations! You've completed all levels!</p>`;
+                newGameButton.innerText = "Replay"; // Change button text to "Replay"
+                newGameContainer.classList.remove("hide"); // Show the new game option
+            }
+        };
+        
+        const gameOver = () => {
+            resultText.innerHTML = `<h2 class='lose-msg'>You Lose!!</h2><p>The word was <span>${chosenWord}</span></p>`;
+            blocker(); // Assuming this function handles blocking the game interaction
+            newGameButton.innerText = "Replay"; // Change button text to "Replay"
+            newGameContainer.classList.remove("hide"); // Show the new game option
+        };
+
+        const blocker = () => {
+            const letterButtons = document.querySelectorAll(".letters");
+            letterButtons.forEach(button => button.disabled = true);
+        };
+
+        const resetGame = () => {
+            winCount = 0;
+            wrongCount = 0;
+            letterContainer.innerHTML = "";
+            userInputSection.innerHTML = "";
+            optionsContainer.innerHTML = "";
+            revealedIndices = [];
+            startGame();
+        };
+
+        const resetCanvas = () => {
+            const context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        };
+
+        const drawMan = (count) => {
+            const context = canvas.getContext("2d");
+            context.beginPath();
+            context.strokeStyle = "#000";
+            context.lineWidth = 2;
+
+            switch(count) {
+                case 1: context.arc(70, 30, 10, 0, Math.PI * 2, true); break; // Head
+                case 2: context.moveTo(70, 40); context.lineTo(70, 80); break; // Body
+                case 3: context.moveTo(70, 50); context.lineTo(50, 70); break; // Left Arm
+                case 4: context.moveTo(70, 50); context.lineTo(90, 70); break; // Right Arm
+                case 5: context.moveTo(70, 80); context.lineTo(50, 110); break; // Left Leg
+                case 6: context.moveTo(70, 80); context.lineTo(90, 110); break; // Right Leg
+            }
+            context.stroke();
+        };
+
+        newGameButton.addEventListener("click", () => {
+            currentLevel = 1; 
+            winCount = 0; 
+            wrongCount = 0; 
+            guessedLetters.clear(); 
+            revealedIndices = []; 
+            letterContainer.classList.add("hide");
+            userInputSection.innerHTML = ""; 
+            optionsContainer.innerHTML = ""; 
+            newGameContainer.classList.add("hide"); 
+            resultText.innerHTML = ""; 
+            resetCanvas(); 
+            startGame();
+        });
+
+        window.onload = startGame;
+
+        // Immediately invoked function to avoid polluting global scope
+        (function() {
+            // Get modal elements
+            const instructionsModal = document.getElementById("instructions-modal");
+            const closeModalButton = document.getElementById("close-instructions");
+            const startGameButton = document.getElementById("start-game-button");
+
+            // Function to show the instructions modal
+            function showInstructions() {
+                instructionsModal.style.display = "block";
+            }
+
+            // Function to close the modal
+            closeModalButton.onclick = function() {
+                instructionsModal.style.display = "none";
+            };
+
+            // Start game when "OK" button is clicked
+            startGameButton.onclick = function() {
+                instructionsModal.style.display = "none";
+                startGame(); // Call your actual game starting function here
+            };
+
+            // Show instructions when the page loads
+            window.onload = function() {
+                showInstructions(); // Automatically show the modal when the page loads
+            };
+
+            // Optional: close modal when clicking outside of the modal
+            window.onclick = function(event) {
+                if (event.target === instructionsModal) {
+                    instructionsModal.style.display = "none";
+                }
+            };
+        })();
+    </script>
+</body>
+</html>

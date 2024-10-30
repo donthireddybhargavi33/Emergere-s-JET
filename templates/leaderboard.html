@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Leaderboard</title>
+{% endblock %}
+
+{% block content %}
+<a class="back-button" onclick="location.href='{% url 'dashboard' %}'"></a>
+<h1 style="color:navy;font-weight: 800;margin-left: 100px;font-size:45;margin-top: 20px;">Leaderboard</h1>
+<main class="table" id="customers_table">
+    <section class="table__header">
+        <input type="search" placeholder="Search Data...">
+    </section>
+    <section class="table__body">
+
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Number of Certifications</th>
+            <th>Number of Courses</th>
+            <th>Certifications</th>
+            <th>Courses</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in leaderboard %}
+        <tr class="{% if entry.rank == 1 %}gold{% elif entry.rank == 2 %}silver{% elif entry.rank == 3 %}bronze{% endif %}">
+            <td>{{ entry.rank }}</td>
+            <td>{{ entry.username }}</td>
+            <td>{{ entry.num_certifications }}</td>
+            <td>{{ entry.num_courses }}</td>
+            <td>
+                <ul>
+                    {% if entry.certifications %}
+                        {% for cert in entry.certifications %}
+                            <li>{{ cert.name }} (Completed on: {{ cert.date_completed }})</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No certifications completed</li>
+                    {% endif %}
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    {% if entry.courses %}
+                        {% for course in entry.courses %}
+                            <li>{{ course.name }} (Completed on: {{ course.date_completed }})</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No courses completed</li>
+                    {% endif %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table><br><br>
+
+<style>
+    main.table {
+        width: 82vw;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 .4rem .8rem #0005;
+        border-radius: .8rem;
+        overflow: hidden;
+        margin-left: 100px;
+    }
+
+    .table__header {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: black;
+        color: white;
+    }
+
+    .table__header input {
+        padding: .5rem;
+        border-radius: 2rem;
+        border: none;
+        outline: none;
+        width: 300px;
+    }
+
+    .table__body {
+        width: 95%;
+        margin: .8rem auto;
+        max-height: calc(70vh - 2rem);
+        overflow: auto;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    th {
+        background-color: rgb(114, 109, 109);
+        color: #fff;
+    }
+
+    .gold {
+        background-color: gold; /* Gold background for rank 1 */
+        color: black; /* Text color */
+    }
+    
+    .silver {
+        background-color: silver; /* Silver background for rank 2 */
+        color: black; /* Text color */
+    }
+    
+    .bronze {
+        background-color: #cd7f32; /* Bronze background for rank 3 */
+        color: black; /* Text color */
+    }
+    .gold:hover{
+        transform: scale(1.0);
+    }
+    .silver:hover{
+        transform: scale(1.0);
+    }
+    .bronze:hover{
+        transform: scale(1.0);
+    }
+    :root {
+        --primary-color: #fff;
+        --secondary-color: #032B44;
+    }
+
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 5px;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 40px;
+    }
+    
+    .back-button::before {
+        content: "";
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+        background-size: 24px 24px;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        margin-right: 10px;
+    }
+    
+    .back-button:hover::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+    }
+    
+    ul {
+        list-style-type: none;
+    }
+</style>
+
+<script>
+    const searchInput = document.querySelector('input[type="search"]'),
+        tableRows = document.querySelectorAll('tbody tr');
+
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        tableRows.forEach(row => {
+            const rowText = row.textContent.toLowerCase();
+            row.style.display = rowText.includes(searchTerm) ? "" : "none";
+        });
+    });
+</script>
+{% endblock %}

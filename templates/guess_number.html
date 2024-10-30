@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Guess the Number{% endblock %}
+
+{% block content %}
+    <h1>Guess the Number</h1>
+    {% if hint %}
+        <p>Hint: {{ hint }}</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="numbers">Enter up to 3 numbers to check:</label>
+        <input type="number" id="numbers" name="numbers[]" required>
+        <input type="number" id="numbers" name="numbers[]" required>
+        <input type="number" id="numbers" name="numbers[]" required>
+        <button class="btn btn-primary" type="submit">Check</button>
+        {% if attempts_left %}
+            <p>You have {{ attempts_left }} attempts left.</p>
+        {% endif %}
+        
+    </form>
+<style>
+.footer {
+
+bottom: 0%;
+width: 100%;
+height: 62px; 
+margin-bottom: 0px;
+color: white;
+background-color: navy;
+padding-left: 490px;
+padding-top: 5px;
+padding-bottom: 0px;
+}
+.footer p{
+font-size: 15px;
+font-weight: 600;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+padding-top: 15px;
+padding-right: 400px;
+color: white;
+padding-left: 190px;
+}
+</style>
+{% endblock %}

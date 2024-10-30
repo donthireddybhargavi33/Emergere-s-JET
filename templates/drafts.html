@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Drafts</h1><br><br>
+<a class="back-button" onclick="location.href='{% url 'inbox' %}'"></a>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for email in emails %}
+        <tr>
+          <td>{{ email.subject }}</td>
+          <td>{{ email.created_at }}</td>
+          <td>
+            <a href="{% url 'email_edit' email.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'email_delete' email.id %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'email_send' email.id %}" class="btn btn-success">Send</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">No draft emails found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<style>
+h1 {
+  margin-top: 20px;
+  margin-left: 40px;
+  font-size: 30px;
+  font-weight: 800;
+  color: #337ab7;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f9f9f9d5;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: #ffffffc7;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddddddb5;
+}
+
+th {
+  text-align: left;
+  background-color: #f0f0f0a8;
+}
+
+td {
+  vertical-align: middle;
+}
+
+.btn {
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #23527c;
+}
+
+.btn-danger {
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+}
+
+.empty-row {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.back-button {
+  position: fixed;
+  top: 30px;
+  left: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top:40px;
+}
+
+.back-button::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat : no-repeat;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.back-button:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+</style>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a class="back-button" onclick="location.href='{% url 'inbox' %}'"></a><h1>Delete Email</h1>
+  <p>Are you sure you want to delete the email with subject "{{ email.subject }}"?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'sent_items' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+<style>
+.back-button {
+  position: fixed;
+  top: 30px;
+  left: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top:40px;
+}
+
+.back-button::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat : no-repeat;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.back-button:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+</style>
+{% endblock %}

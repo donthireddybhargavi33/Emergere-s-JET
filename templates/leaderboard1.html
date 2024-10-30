@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    main.table {
+        width: 82vw;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 .4rem .8rem #0005;
+        border-radius: .8rem;
+        overflow: hidden;
+        margin-left: 100px;
+    }
+
+    .table__header {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: black;
+        color: white;
+    }
+
+    .table__header input {
+        padding: .5rem;
+        border-radius: 2rem;
+        border: none;
+        outline: none;
+        width: 300px;
+    }
+
+    .table__body {
+        width: 95%;
+        margin: .8rem auto;
+        max-height: calc(70vh - 2rem);
+        overflow: auto;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: black;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    .imgBox {
+        display: flex;
+        align-items: center;
+    }
+
+    .imgBox img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: .5rem;
+    }
+
+    .back-button {
+        position: fixed;
+        top: 30px;
+        left: 5px;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 40px;
+    }
+
+    .back-button::before {
+        content: "";
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+        background-size: 24px 24px;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .back-button:hover::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+    }
+
+    /* New styles for top ranks */
+    .gold {
+        background-color: gold;
+        color: black;
+    }
+
+    .silver {
+        background-color: silver;
+        color: black;
+    }
+
+    .bronze {
+        background-color: #cd7f32; /* Bronze color */
+        color: black;
+    }
+</style>
+</head>
+
+<body>
+    <a class="back-button" onclick="location.href='{% url 'bingo' %}'"></a>
+    <h1 style="color:navy;font-weight: 800;margin-left: 100px;font-size:45;margin-top: 20px;">Game-Leaderboard</h1>
+    <main class="table" id="customers_table">
+        <section class="table__header">
+            <input type="search" placeholder="Search Data...">
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                    <tr class="{% if entry.rank == 1 %}gold{% elif entry.rank == 2 %}silver{% elif entry.rank == 3 %}bronze{% endif %}">
+                        <td>{{ entry.rank }}</td>
+                        <td>
+                            <div class="imgBox">
+                                <img src="{{ entry.profile_picture }}" alt="Profile Picture" onerror="this.onerror=null; this.src='{% static 'home/default-img.jpg' %}'">
+                                {{ entry.username }}
+                            </div>
+                        </td>
+                        <td>{{ entry.score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>                
+            </table>
+        </section>
+    </main><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+    <script>
+        const searchInput = document.querySelector('input[type="search"]'),
+            tableRows = document.querySelectorAll('tbody tr');
+
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            tableRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? "" : "none";
+            });
+        });
+    </script>
+{% endblock %}

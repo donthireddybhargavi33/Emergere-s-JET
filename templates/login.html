@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="container col-md-6 " style="margin-top: 10px;">
+<h1 class="calm">Welcome to JET shed</h1>
+
+
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h1 class="text-middle">Enter your credentials!</h1>
+      <form method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" class="form-control"><br>
+        <label for="password">Password:</label>
+<div class="input-container">
+    <input type="password" id="password" name="password" class="form-control">
+    <span class="eye-icon" id="togglePassword">
+        <i class="fas fa-eye" id="eyeIcon"></i>
+    </span>
+</div>
+<br>
+        <button type="submit" class="btn btn-success btn-block">Login</button>
+      </form><br>
+      <p class="text-center">Don't have an account?
+        <a href="{% url 'register' %}" style="text-decoration: none; color: inherit;">
+          <button class="btn btn-primary btn-sm">SignUp</button>
+        </a>
+      </p>
+    </div>
+</div>
+</div><br>
+<style>
+.container {
+  background-color:rgb(240, 240, 241); 
+  padding: 20px;
+  border-radius: 10px;
+  color: navy;
+}
+.calm, h1 {
+  text-align: center; 
+  font-size: 40px;
+  margin-bottom: 30px;
+  font-weight: 700;
+  color: navy;
+  margin-left: 44px;
+  margin-top: 30px;
+}
+
+.text-middle {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 500;
+  margin-bottom: 20px;
+  font-size:22px;
+  flex-wrap: nowrap;
+  margin-right: 35px;
+}
+
+.text-center, p {
+  text-align: center; 
+  font-size: 15px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  margin-left: 5px;
+  margin-top: 0px;
+}
+
+form {
+  width: 500px;
+  margin: 0 auto; 
+  padding: 20px;
+  padding-left: 50px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc!important;
+}
+
+button[type="submit"] {
+  background-color: #0c89f6!important;
+  color: #fff!important;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  
+}
+
+button[type="submit"]:hover {
+  background-color: #2970ae!important;
+}
+
+.btn-primary {
+  background-color: #0584f4!important;
+  color: #fff!important;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #2970ae!important;
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color:navy; 
+}
+
+.eye-icon:hover {
+    color:orangered; 
+}
+
+
+</style>
+<script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  togglePassword.addEventListener('click', function () {
+      // Toggle the type attribute
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      
+      // Toggle the eye / eye slash icon
+      eyeIcon.classList.toggle('fa-eye-slash'); // Toggle eye slash class
+  });
+</script>
+
+{% endblock %}

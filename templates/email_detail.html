@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Email Detail</h1>
+  <a class="back-button" onclick="location.href='{% url 'inbox' %}'"></a>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ email.subject }}</h5>
+      <p class="card-text">{{ email.message }}</p>
+      <p class="card-text">From: {{ email.From.username }}</p>
+      <p class="card-text">To: {{ email.TO.username }}</p>
+      {% if email.cc_users %}
+        <p class="card-text">CC: {% for user in email.cc_users.all %}{{ user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      {% endif %}
+      {% if email.bcc_users %}
+        <p class="card-text">BCC: {% for user in email.bcc_users.all %}{{ user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if request.path == '/sent_items/' %}
+    <a href="{% url 'sent_items' %}" class="btn btn-secondary">Sent Items</a>
+  {% else %}
+    <a href="{% url 'inbox' %}" class="btn btn-secondary">Inbox</a>
+  {% endif %}
+  <style>
+.back-button {
+  position: fixed;
+  top: 30px;
+  left: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top:40px;
+}
+
+.back-button::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat : no-repeat;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.back-button:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+h1{
+  margin-left: 30px;
+  margin-top: 20px;
+  font-size: 25px;
+  font-weight: 700;
+}
+</style>
+{% endblock %}

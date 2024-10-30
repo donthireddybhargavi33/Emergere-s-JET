@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a class="back-button" onclick="location.href='{% url 'dashboard' %}'"></a>
+<p>
+    <h1 class="text" >Help Page</h1><br><br>
+    <b>Frequently Asked Questions</b>
+    What is the purpose of this AI generator?
+    This AI generator is designed to help users generate email responses based on a given subject and message.
+    
+    How do I use the AI generator?
+    <ol>
+        <li>Enter a subject and message in the input fields.</li>
+        <li>Enter a subject and message in the input fields.</li>
+        <li>Click the "Generate Response" button</li>
+        <li>The AI generator will produce a response based on the input.</li>
+    </ol>
+    What if I encounter an error?
+    If you encounter an error, please check the input fields for any mistakes. If the issue persists, please contact our support team for assistance.
+
+    <br>
+    <br>
+    If You're Facing any Other Issues Kindly, Contact Us
+    "support@emergerteh.com"</p><br><br><br><br><br><br><br><br><br><br><br><br>
+<style>
+.text{
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 20px;
+}
+.back-button {
+  position: fixed;
+  top: 30px;
+  left: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top:40px;
+}
+
+.back-button::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat : no-repeat;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.back-button:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+</style>
+{% endblock %}

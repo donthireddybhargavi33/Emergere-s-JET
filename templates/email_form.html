@@ -1,0 +1,179 @@
+<!-- email_form.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Email Form</h2>
+      <a class="back-button" onclick="location.href='{% url 'inbox' %}'"></a>
+      <form method="post">
+        {% csrf_token %}
+        <table>
+          {% for field in form %}
+            {% if field.name != 'cc_users' and field.name != 'bcc_users' %}
+              <tr>
+                <th>{{ field.label }}</th>
+                <td>{{ field }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          <tr>
+            <th>CC</th>
+            <td>
+              {{ form.cc_users }}
+            </td>
+          </tr>
+          <tr>
+            <th>BCC</th>
+            <td>
+              {{ form.bcc_users }}
+            </td>
+          </tr>
+          {% if template_type %}
+            <tr>
+              <th>Selected Template</th>
+              <td>
+                <p>{{ template.content }}</p>
+              </td>
+            </tr>
+          {% endif %}
+          {% if use_generated_text %}
+            <tr>
+              <th>AI-Generated Content</th>
+              <td>
+                <p>{{ generated_text }}</p>
+              </td>
+            </tr>
+          {% endif %}
+          <tr>
+            <th>Template</th>
+            <td>
+              <button class="btn btn-secondary" type="button" id="select-template">Select Template</button>
+            </td>
+          </tr>
+          <tr>
+            <th>Generate Text with AI</th>
+            <td>
+              <button class="btn btn-secondary" type="button" id="generate-text">Generate Text with AI</button>
+            </td>
+          </tr>
+          {% comment %} <tr>
+            <th>Message</th>
+            <td>
+              <textarea name="message" id="id_message">{{ request.GET.template_content }}</textarea>
+            </td>
+          </tr> {% endcomment %}
+        </table>
+        <button class="btn btn-primary" type="submit">Send Email</button>
+        <script>
+          document.getElementById('generate-text').addEventListener('click', function() {
+            window.location.href = "{% url 'generate_ai' %}";
+          });
+          document.getElementById('select-template').addEventListener('click', function() {
+            window.location.href = "{% url 'templates' %}";
+          });
+        </script>
+      </form>
+    </div>
+  </div>
+  <style>
+    .row {
+      margin-bottom: 20px;
+    }
+
+    .col-md-12 {
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: bold;
+      color: #337ab7;
+    }
+
+    form {
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      text-align: left;
+      background-color: #f0f0f0;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .btn {
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background-color: #118cf7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: #3674a9;
+    }
+
+    .btn-secondary {
+      background-color: #444;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: orangered;
+    }
+    .back-button {
+      position: fixed;
+      top: 30px;
+      left: 5px;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top:40px;
+    }
+    
+    .back-button::before {
+      content: "";
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+      background-size: 24px 24px;
+      background-position: center;
+      background-repeat : no-repeat;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    
+    .back-button:hover::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+    }
+  </style>
+{% endblock %}

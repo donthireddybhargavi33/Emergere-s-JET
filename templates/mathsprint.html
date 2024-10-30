@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Sprint Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ddd;
+            color: white;
+        }
+
+        .container {
+            width: 50%;
+            height: 63%;
+            text-align: center;
+            background-color: Navy;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            color: white;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        p {
+            font-size: 30px;
+            margin: 10px 0;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .option {
+            margin: 0 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: rgb(33, 165, 50);
+            color: white;
+            border: 1px solid gray;
+            border-radius: 5px;
+            font-size: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .option:hover {
+            background-color: orange;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 25px;
+            cursor: pointer;
+            background-color: orangered;
+            color: #fff;
+            border: 1px solid gray;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d35400;
+        }
+
+        .score {
+            margin-top: 20px;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 24px;
+            color: white;
+        }
+
+        #timer {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+            background-color: white;
+            padding: 15px 30px; /* Adjusted padding to match the button */
+            border-radius: 5px;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        #highScore {
+            margin-top: 20px;
+            font-size: 25px;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            color: white;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 24px;
+            font-family: 'Times New Roman', Times, serif;
+            color: red;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.7); /* Black with transparency */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+        }
+
+        /* Responsive Styles */
+        @media only screen and (max-width: 900px) {
+            .container {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            p {
+                font-size: 24px;
+            }
+
+            .option {
+                font-size: 18px;
+                padding: 5px 12px;
+            }
+
+            button {
+                font-size: 18px;
+                padding: 8px 20px;
+                margin-top: 50px;
+            }
+
+            .score {
+                font-size: 20px;
+            }
+
+            #timer {
+                font-size: 18px;
+            }
+
+            #highScore {
+                font-size: 20px;
+            }
+
+            #result {
+                font-size: 20px;
+            }
+        }
+
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 5px;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 40px;
+        }
+
+        .back-button::before {
+            content: "";
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+            background-size: 24px 24px;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .back-button:hover::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid navy;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        button {
+            margin-top: 10px;
+            background-color: navy;
+            color: white;
+            padding: 5px 10px;
+        }
+        button:hover{
+            background-color: orangered;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="back-button" onclick="location.href='{% url 'bingo' %}'"></a>
+    <div class="container col-md-12">
+        <h1>Math Sprint Game</h1>
+        <p id="problem"></p>
+        <div class="options" id="options"></div>
+        <p id="result"></p>
+        <p class="score">Score: <span id="currentScore">0</span></p><br>
+        <p id="timer">Time: <span id="time">30</span> seconds</p><br>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="resetGame()">Reset Game</button>
+        <p id="highScore">High Score: <span id="highScoreValue">0</span></p>
+    </div>
+
+    <!-- Modal for Game Over -->
+    <div id="restartModal" class="modal hide">
+        <div class="modal-content" style="top:0px;width:200px">
+            <h2 style="color:navy">Game Over!</h2>
+            <p id="gameResultMessage" style="color:navy"></p>
+            <button id="continueButton">Continue</button>
+            <button id="exitButton">Exit</button>
+        </div>
+    </div>
+    <div id="overlay"></div>
+    <div id="popup">
+        <h2 style="color: Navy;">Instructions</h2>
+        <ol style="color: black;">
+            <li>Answer the math problems as quickly as possible.</li>
+            <li>You have 30 seconds to solve as many problems as you can.</li>
+            <li>Choose the correct answer from the options provided.</li>
+            <li>If you select the wrong answer, the game will end.</li>
+            <li>Score increases with each correct answer.</li>
+            <li>After every 5 correct answers, you will level up!</li>
+            <li>Click "OK" to start the game!</li>
+        </ol>
+        <button id="start-button">OK</button>
+    </div>
+    <script>
+        let timer;
+        let time = 30;
+        let score = 0;
+        let highScore = 0;
+        let currentLevel = 1;
+
+        function startGame() {
+            resetGame();
+            setLevel(currentLevel);
+            generateProblem();
+            generateOptions();
+            timer = setInterval(updateTimer, 1000);
+            document.getElementById('highScoreValue').innerText = highScore;
+        }
+
+        function resetGame() {
+            clearInterval(timer);
+            time = 30;  // Reset time duration
+            score = 0;
+            currentLevel = 1;
+            document.getElementById('time').innerText = time;
+            document.getElementById('result').innerText = '';
+            document.getElementById('currentScore').innerText = score;
+            document.getElementById('options').innerHTML = '';
+            document.getElementById('problem').innerText = '';
+        }
+
+        function updateTimer() {
+            time--;
+            document.getElementById('time').innerText = time;
+            if (time <= 0) {
+                endGame();
+            }
+        }
+
+        function getRandomOperation() {
+            const operations = ['+', '-', '*', '/'];
+            const randomIndex = Math.floor(Math.random() * operations.length);
+            return operations[randomIndex];
+        }
+
+        function setLevel(level) {
+            currentLevel = level;
+            time = 30 - (level - 1) * 5; // Decrease time by 5 seconds for each level
+            if (time < 5) { // Set a minimum time limit
+                time = 5;
+            }
+        }
+
+        function generateProblem() {
+            const num1 = Math.floor(Math.random() * (currentLevel * 10));
+            const num2 = Math.floor(Math.random() * (currentLevel * 10));
+            const operation = getRandomOperation();
+            let problem;
+
+            switch (operation) {
+                case '+':
+                    problem = `${num1} + ${num2}`;
+                    break;
+                case '-':
+                    problem = `${num1} - ${num2}`;
+                    break;
+                case '*':
+                    problem = `${num1} * ${num2}`;
+                    break;
+                case '/':
+                    const divisor = num2 !== 0 ? num2 : 1; // Avoid division by zero
+                    problem = `${num1} / ${divisor}`;
+                    break;
+                default:
+                    problem = '';
+            }
+
+            document.getElementById('problem').innerText = problem;
+        }
+
+        function generateOptions() {
+            const problemText = document.getElementById('problem').innerText;
+            const correctAnswer = eval(problemText);
+            const options = [correctAnswer];
+
+            while (options.length < 4) {
+                let option = correctAnswer + Math.floor(Math.random() * 20) - 10;
+                if (!options.includes(option)) {
+                    options.push(option);
+                }
+            }
+
+            options.sort(() => Math.random() - 0.5);
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.innerText = option.toFixed(2);
+                button.onclick = () => selectOption(option, correctAnswer);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(selectedOption, correctAnswer) {
+            if (selectedOption === correctAnswer) {
+                score++;
+                document.getElementById('currentScore').innerText = score;
+                if (score % 5 === 0 && currentLevel < 5) {
+                    currentLevel++;
+                    setLevel(currentLevel);
+                    alert(`Level Up! You've reached Level ${currentLevel}`);
+                }
+                generateProblem();
+                generateOptions();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            document.getElementById('result').innerText = 'Game Over!';
+            document.getElementById('options').innerHTML = '';
+            document.getElementById('problem').innerText = '';
+            document.getElementById('gameResultMessage').innerText = `Final Score: ${score}`;
+            // Show the game over modal
+            document.getElementById('restartModal').style.display = "block"; 
+            updateHighScore();
+        }
+
+        function updateHighScore() {
+            if (score > highScore) {
+                highScore = score;
+                document.getElementById('highScoreValue').innerText = highScore;
+            }
+        }
+
+        // Event listeners for modal buttons
+        document.getElementById("continueButton").addEventListener("click", () => {
+            resetGame(); // Function to reset the game to the first level
+            document.getElementById("restartModal").style.display = "none"; // Hide the modal
+            startGame(); // Restart the game
+        });
+
+        document.getElementById("exitButton").addEventListener("click", () => {
+            window.history.back(); // Go back to the previous page
+        });
+
+        window.onload = function() {
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("popup").style.display = "block";
+};
+
+// Start button functionality
+document.getElementById("start-button").addEventListener("click", function() {
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("popup").style.display = "none";
+    startGame(); // Start the game
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+      <div class="aim col-md-12">
+          <div class="welcome-container" style="display: flex; align-items: center; justify-content: center;">
+              {% if not user.is_authenticated %}
+              <h1 class="welcome-text">
+                  JET-<span style="font-size: 30px;">Emergere's Training Management Portal</span>
+              </h1>
+              {% else %}
+              <h1 class="welcome-text" >
+                  Welcome {{ user.username }}
+              </h1>
+              {% endif %}
+          </div>
+          <p class="subtext" style="font-size: 20px;margin-left: 70px;">
+              Empower your learning journey
+          </p>
+          <div class="banner"></div>
+      </div>
+
+
+
+      <div class="container col-md-12 border-gradient fade-in" style="width: 98%; background-color: white; text-align: center;" id="what-is-jet">
+        <h1 style="color: navy; font-size: 25px; font-weight: 900; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">About JET</h1>
+        
+        <div class="col-md-12">
+            <p style="font-family: 'Times New Roman', Times, serif; font-size: 17px; margin: 0 auto;">JET is your all-in-one web application designed to simplify the assignment, tracking, and reporting of your learning goals.</p><br>
+        </div>
+        
+        <div class="col-md-12">
+            <p style="font-family: 'Times New Roman', Times, serif; font-size: 17px; margin: 0 auto;">Engage with your learning through fun challenges - gamification!</p>
+        </div>
+    </div> 
+    
+
+
+  <div class="container col-md-12 border-gradient" style="width: 98%;" id="key-features">
+    <h2 class="aim" style="color: navy;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Key Features</h2>
+  
+    <section class="slide-in" style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+      <div class="list-container slide-in-left">
+        <div class="icon-drop">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <div class="text-container">
+          <strong>Seamless Tracking</strong>
+          <p style="font-size:17px;">Monitor your progress in real-time and ensure you’re on the path to success.</p>
+        </div>
+      </div>
+  
+      <div class="list-container slide-in-right">
+        <div class="icon-drop">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="text-container">
+          <strong>Email Automation</strong>
+          <p style="font-size:17px;">Stay informed with timely updates and reminders delivered directly to your inbox.</p>
+        </div>
+      </div>
+  
+      <div class="list-container slide-in-left">
+        <div class="icon-drop">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="text-container">
+          <strong>Automated Reporting</strong>
+          <p style="font-size:17px;">Receive insightful reports that highlight your achievements and areas for growth.</p>
+        </div>
+      </div>
+  
+      <div class="list-container slide-in-right">
+        <div class="icon-drop">
+          <i class="fas fa-gamepad"></i>
+        </div>
+        <div class="text-container">
+          <strong>Gamification</strong>
+          <p style="font-size:17px;">Engage with your learning through fun challenges and rewards that keep you motivated.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+  <div class="container col-md-12 border-gradient slide-in-left" style="width: 98%; margin-top: 20px; display: flex; align-items: center;">
+    <div class="col-md-12 d-flex align-items-center justify-content-center">
+        <a href="{% url 'login' %}">
+            <img src="{% static 'home/user-managemnet.jpg' %}" alt=" " class="img-animate" style="width: 200px; height: 200px; margin-right: 10px; border-radius:20px; transition: transform 0.3s ease-out;">
+        </a>
+        <p style="margin-left: 20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 17px;">
+            <strong style="color: navy; font-size: 20px;">User Management</strong><br> 
+            Effortlessly add, remove, and manage users with just a few clicks. Our intuitive interface ensures smooth navigation and easy control over user access and permissions.
+        </p>
+    </div>
+</div>
+
+<div class="container col-md-12 border-gradient slide-in-right" style="width: 98%; margin-top: 20px; display: flex; align-items: center;">
+    <div class="col-md-12 d-flex align-items-center justify-content-center">
+        <p style="margin-right: 20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 17px;">
+            <strong style="color: navy; font-size: 20px;">User Dashboard</strong><br> 
+            Get a bird’s-eye view of all your learning activities and performance metrics. The User Dashboard is your personalized command center, presenting insights and progress in a sleek, digestible format.
+        </p>
+        <a href="{% url 'login' %}">
+            <img src="{% static 'home/user-dashboard.jpg' %}" alt="Image 2" class="img-animate" style="width: 200px; height: 200px; margin-left: 10px; border-radius: 20px; transition: transform 0.3s ease-out;">
+        </a>
+    </div>
+</div>
+
+<div class="container col-md-12 border-gradient slide-in-left" style="width: 98%; margin-top: 20px; display: flex; align-items: center;">
+    <div class="col-md-12 d-flex align-items-center justify-content-center">
+        <a href="{% url 'login' %}">
+            <img src="{% static 'home/mail-system.jpg' %}" alt="Image 3" class="img-animate" style="width: 200px; height: 200px; margin-right: 10px; border-radius: 20px; transition: transform 0.3s ease-out;">
+        </a>
+        <p style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 17px;">
+            <strong style="color: navy; font-size: 20px;">Email System</strong><br> 
+            Never miss a beat with our robust email system. Receive automated updates, reminders, and notifications that keep you informed and on track with your learning goals. Stay connected and engaged seamlessly!
+        </p>
+    </div>
+</div>
+
+<div class="container col-md-12 border-gradient slide-in-right" style="width: 98%; margin-top: 20px; display: flex; align-items: center;">
+    <div class="col-md-12 d-flex align-items-center justify-content-center">
+        <p style="margin-right: 20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 17px;">
+            <strong style="color: navy; font-size: 20px;">Gamification</strong><br> 
+            Level up your learning journey with our gamification features! Earn points and badges for completing challenges and achieving milestones, make yourself engaged and feel yourself motivated through our games which are designed on aspects of upskilling logical thinking and problem-solving skills.
+        </p>
+        <a href="{% url 'bingo' %}">
+            <img src="{% static 'home/gamehub.jpg' %}" alt="Image 4" class="img-animate" style="width: 200px; height: 200px; margin-left: 10px; border-radius: 20px; transition: transform 0.3s ease-out;">
+        </a>
+    </div>
+</div>
+
+
+
+
+<div class="container col-md-12 border-gradient" id="our-team">
+  <h2 style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Our Team</h2>
+  <div class="row">
+    <div class="col-lg-3 col-md-4 col-sm-3">
+      <img src="{% static 'home/Akash.jpg' %}">
+      <div class="text-block" style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;width:290px">
+        <h1>Akash PG</h1>
+        <p>"Back-End Developer"</p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-3">
+      <img src="{% static 'home/Bhargavi.jpg' %}">
+      <div class="text-block" style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;width:290px">
+        <h1>Donthireddy Bhargavi</h1>
+        <p>"Team Lead & Front-End Developer"</p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-3">
+      <img src="{% static 'home/Sheik.jpg' %}">
+      <div class="text-block" style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;width:290px">
+        <h1>Sheik Mathar A</h1>
+        <p>"UI/UX Architect "</p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-3">
+      <img src="{% static 'home/Vaishnavy.jpg' %}">
+      <div class="text-block" style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;width:290px">
+        <h1>Vaishnavy Vishwanathan</h1>
+        <p>"Project Manager  "</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% if not user.is_authenticated %}
+<div class="container col-md-12 border-gradient" style="width: 98%; align-items: center;" id="get-started">
+  <div class="row">
+      <div class="col-md-12 text-center">
+          <h2 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Get Started</h2>
+          <div class="button-container">
+              <div class="button-group" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                  <a href="{% url 'login' %}">
+                      <button class="btn btn-secondary">Sign in</button>
+                  </a>
+                  <p style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 17px;">Hey buddy Welcome Back!</p>
+              </div>
+              <div class="button-group" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                  <a href="{% url 'register' %}">
+                      <button class="btn btn-primary">Sign up</button>
+                  </a>
+                  <p style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 17px;">Kudos to your Successful Career Journey!</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endif %}
+</div>
+<style>
+body {
+  margin: 0;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.container {
+        padding: 0; 
+        margin: 0; 
+    }
+
+    .row {
+        margin: 0; 
+    }
+
+    .aim {
+        text-align: center; 
+        margin: 0 auto; 
+    }
+.welcome-container {
+  position: relative;
+  color: white;
+  background: none;
+  box-shadow: none;
+}
+.img-animate:hover {
+    transform: scale(1.05); /* Scale image slightly on hover */
+}
+
+.welcome-text {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin-left: 50px;
+  margin-bottom: 0;
+  font-size: 50px;
+  text-shadow: none;
+}
+
+
+.subtext {
+  text-align: center;
+  font-size: 5px;
+  color: navy;
+  margin-top: 0;
+  margin-left: 100px;
+}
+
+.banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  filter: blur(1px);
+  height: 120px; 
+  background: linear-gradient(80deg,  transparent 2%, whitesmoke 100%, transparent 4%);
+  animation: slide 10s infinite ease-in-out;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-100%); 
+  }
+100% {
+    transform: translateX(100%); 
+  }
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeInEffect 2s ease forwards;
+}
+
+@keyframes fadeInEffect {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+  .slide {
+    animation: slideInLeft 0.5s ease-out forwards;
+}
+
+/* Keyframes for the slide-left animation */
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.header-container {
+    text-align: center;
+    background-color: #001f4d;
+    padding: 20px;
+    color: white;
+}
+
+.welcome-text {
+    font-size: 3em;
+    animation: fadeInSlideLeft 3s ease-out;
+
+}
+
+.subtext {
+    font-size: 1.5em;
+    font-weight: bold;
+    animation: fadeIn 3s ease-out 1.5s;
+}
+
+/* Keyframes for animations */
+@keyframes fadeInSlideLeft {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.slide-in {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.slide-in-left {
+  animation: slideInLeft 2s forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 2s forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+    animation: slideInLeft 2s forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes flip {
+    0% {
+        transform: rotateY(0);
+    }
+    50% {
+        transform: rotateY(180deg);
+    }
+    100% {
+        transform: rotateY(0);
+    }
+}
+
+.icon-drop {
+    display: inline-block;
+    animation: pulse 1.5s infinite;
+    transition: transform 0.3s;
+}
+
+.icon-drop:hover {
+    animation: pulse 0.5s;
+    animation-name: pulse, flip;
+}
+
+
+.icon-drop {
+  display: inline-block;
+  width: 100px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: navy;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.list-container {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  font-size:17px;
+  border-radius: 10px;
+  margin: 20px;
+  padding: 20px;
+  width: calc(40% - 20px);
+}
+
+.text-container {
+  flex-grow: 1;
+}
+
+
+
+.list-container h2 {
+    margin-top: 0;
+}
+
+.list-container p {
+    margin-bottom: 5px;
+}
+
+/* Add colors to containers */
+
+  #content-container {
+    display: none;
+    margin: 0px;
+  }
+  
+  #content-container section {
+    margin: 5px;
+  }
+  
+  #content-container section h2 {
+    margin: 5px;
+  }
+  
+  #content-container section h2 span {
+    margin: 5px;
+  }
+  .border-gradient {
+    border: 2px solid;
+    border-image-slice: 1;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    background-color: transparent;
+  }
+
+  .container:hover, .border-gradient:hover{
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  }
+
+
+  #toggle-button {
+  background-color: #03055B;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+#toggle-button:hover {
+  background-color: #FF9900;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(255, 153, 0, 0.5);
+}
+
+#toggle-button:active {
+  transform: scale(0.9);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#toggle-button:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.img-animate {
+    animation: fadeIn 1s;
+  } 
+  .img-animate:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  } 
+.show {
+    opacity: 1;
+}
+  
+.hide-button {
+    opacity: 0;
+    pointer-events: none;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7;
+  line-height: 1.6;
+  border-radius: 5px;
+  border-color: #ddd;
+  box-shadow:0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  border-color: #ddd;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow:0 0 10px rgba(255, 255, 255, 0.5);
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* For smaller screens, stack the image and text vertically */
+
+
+.container .col-md-10 img {
+    width: 200px;
+    height: 200px;
+    object-fit: justify;
+    border-radius: 10px; 
+    padding: 2px; 
+    margin: 2px; 
+  }
+  
+.border-gradient {
+  border: 2px solid;
+  border-color: #ddd;
+  border-image-slice: 1;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.border-gradient:hover {
+  box-shadow:  rgb(248, 151, 6);
+}
+/* Other styles remain the same */
+
+h1, h2 {
+  color: #03055B;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 24px;
+  text-align: center;
+}
+
+#our-team .row div {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#our-team .row div img {
+  transition: transform 0.5s ease;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+#our-team .row div:hover img {
+  transform: scale(1.2);
+}
+
+#our-team .row div:hover .text-block {
+  opacity: 1;
+  animation: slideRight 0.5s ease forwards;
+}
+
+#our-team .row div .text-block {
+  position: relative;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  transform: translateY(-20px);
+}
+
+@keyframes slideRight {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#our-team .row div .text-block h1 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff !important;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#our-team .row div .text-block p {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+}
+
+
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin: 20px 0;
+  border-radius: 5px;
+
+}
+
+.col-md-3 {
+  flex-basis: 28%;
+  margin: 20px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.col-md-10 {
+  flex-basis: 80%;
+  margin: 20px;
+  text-align: center;
+  padding-left: 10px;
+  border-radius: 5px;
+  border-radius: 5px;
+
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #03055B;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: orangered;
+  color: #fff;
+}
+.container col-md-12 p{
+    text-align: center;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+a {
+  text-decoration: none;
+  color: #03055B;
+}
+
+a:hover {
+  color: orangered;
+}
+
+/* Media Queries */
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    flex-basis: 90%;
+  }
+  .container {
+    flex-basis: 90%;
+  }
+}
+.button-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.button-group {
+  text-align: center;
+  font-size: 10px;
+}
+
+.button-group button {
+  margin-bottom: 10px;
+}
+
+</style>
+<script>
+
+  document.getElementById('Key-Features').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('toggle-button').addEventListener('click', function() {
+    document.querySelector('.hero-container').classList.toggle('show');
+    document.getElementById('toggle-button').classList.toggle('hide-button');
+    document.querySelector('.environment').classList.toggle('show');
+    document.querySelector('.hero').classList.toggle('show');
+    document.getElementById('content-container').style.display = 'block';
+    this.style.display = 'none'; // hide the button after clicking
+  });
+</script>
+{% endblock %}

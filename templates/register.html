@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Register</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 style=" color: navy;">Personal Details</h3>
+                                {% for field in personal_details_form %}
+                                    <div class="form-group">
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <ul>
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-12">
+                                <h3 style=" color: navy;">Professional Details</h3>
+                                {% for field in professional_details_form %}
+                                    <div class="form-group">
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <ul>
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 style=" color: navy;">Password</h3>
+                                <div class="password-requirements">
+                                  <p>The password should have a minimum of 8 characters, include at least one uppercase letter (A to Z), one lowercase letter (a to z), one number (0 to 9), and one special character (!, @, #, $, etc.).</p>
+                                </div>
+                             <!-- Password Field -->
+                                <label for="password">Password:</label>
+                                <div class="input-container">
+                                    <input type="password" id="password" name="password" class="form-control">
+                                    <span class="eye-icon" id="togglePassword">
+                                        <i class="fas fa-eye" id="eyeIcon"></i>
+                                    </span>
+                                    {% if user_registration_form.password.errors %}
+                                        <ul>
+                                            {% for error in user_registration_form.password.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Confirm Password Field -->
+                                <label for="confirm_password">Confirm Password:</label>
+                                <div class="input-container">
+                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control">
+                                    <span class="eye-icon" id="toggleConfirmPassword">
+                                        <i class="fas fa-eye" id="confirmEyeIcon"></i>
+                                    </span>
+                                    {% if user_registration_form.confirm_password.errors %}
+                                        <ul>
+                                            {% for error in user_registration_form.confirm_password.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="button-container">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-block">
+                <a href="{% url 'user_list' %}" style="text-decoration: none; color: inherit;">Back to Users Page</a>
+            </button>
+        </div>
+    </div>
+</div>
+<style>
+.button-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    padding: 20px;
+}
+
+.btn {
+    flex: 1 0 20%;
+    max-width: 200px;
+    margin: 0px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.card-header {
+  background-color: #f7f7f7; 
+  padding: 10px;
+  border-bottom: 1px solid #ddd; 
+
+}
+
+h2 {
+  margin-top: 0; 
+  font-weight: bold; 
+  color: orangered;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 43px;
+ 
+}
+
+.col-md-12 {
+  flex: 0 0 100%; 
+  max-width: 100%; 
+ 
+}
+
+h3 {
+  margin-top: 10px; 
+  font-weight: bold;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.form-group{
+    font-size: 12px;
+    font-weight:200;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: large;
+  font-weight: 500;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+ 
+}
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc!important;
+  border-radius: 5px;
+ 
+}
+button[type="submit"] {
+  background-color: #0c89f6!important;
+  color: #fff!important;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-left: 460px;
+ 
+}
+
+button[type="submit"]:hover {
+  background-color: #2970ae!important;
+  
+}
+
+.btn-primary {
+  background-color: #0584f4!important;
+  color: #fff!important;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+}
+
+.btn-primary:hover {
+  background-color:  #2970ae!important;
+  
+}
+.btn-block{
+  background-color: #0584f4!important;
+  color: #fff!important;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+ 
+}
+.btn-block:hover {
+  background-color:  #2970ae!important;
+  
+}
+
+.password-requirements p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #666;
+}
+.input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color:navy; 
+}
+
+.eye-icon:hover {
+    color:orangered; 
+}
+
+
+</style>
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        eyeIcon.classList.toggle('fa-eye-slash'); // Toggle eye slash class
+    });
+
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    const confirmEyeIcon = document.getElementById('confirmEyeIcon');
+
+    toggleConfirmPassword.addEventListener('click', function () {
+        const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPasswordInput.setAttribute('type', type);
+        confirmEyeIcon.classList.toggle('fa-eye-slash'); // Toggle eye slash class
+    });
+</script>
+
+{% endblock %}
