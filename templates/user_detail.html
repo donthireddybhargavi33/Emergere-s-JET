@@ -1,0 +1,260 @@
+<!-- user_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<button><a class="back-button" onclick="location.href='{% url 'user_list' %}'"></a></button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12"> <!-- Change col-md-6 to col-md-12 -->
+            <h1 class="text-center"><strong>User Details</strong></h1>
+            <div class="profile-container" style="display: flex; align-items: center; margin-top: 20px; margin-bottom: 30px;">
+                <div class="profile-picture" style="width: 120px; height: 120px; border-radius: 50%; margin-left: 300px; margin-bottom:80px ;margin-top:40px;">
+                  {% if user.profile.profile_picture %}
+                  <img src="{% if user.profile.profile_picture %}{{ user.profile.profile_picture.url }}{% else %}{% static 'home/default-img.jpg' %}{% endif %}" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                  {% else %}
+                    <img src="{% static 'home/default-img.jpg' %}" alt="Profile Picture" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                  {% endif %}
+                </div>
+                <div class="user-info" style="flex: 1;margin-top: 60px;">
+                    <p style="font-size: 15px; font-weight: 700;margin-left: 20px;">Name: {{ user.first_name }} {{ user.last_name }}</p>
+                    <p style="font-size: 15px; font-weight: 700;margin-left: 20px;">Email: {{ user.email }}</p>
+                    <p style="font-size: 15px; font-weight: 700;margin-left: 20px;">Bio: {{ user.bio }}</p>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-profile-modal" style="background-color:navy;margin-right: 80px;margin-top: 40px;">
+                            View User Profile
+                        </button>
+                        <button type="button" class="btn btn-link" style="background-color:navy;margin-right: 160px;margin-top: 40px;">
+                            <a href="{% url 'user_update' user.pk %}" style="text-decoration: none; color: inherit;">Edit Profile</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="user-profile-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:navy;">
+                <h5 class="modal-title" id="exampleModalLabel">{{ user.first_name }} Profile</h5>
+                <button type="button" class="btn btn-sm close" data-dismiss="modal" aria-label="Close" style="background-color:navy;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 style="color:orangered;">Personal Details!</h3>
+                <h4>
+                    {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile -picture img-thumbnail rounded-circle" style="width: 100px; height: 100px;">
+                    {% else %}
+                        <img src="{% static 'home/default-img.jpg' %}" alt="Profile Picture" class="profile -picture img-thumbnail rounded-circle" style="width: 100px; height: 100px;">
+                    {% endif %}
+                    <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+                    <p>About: {{ user.About|default:'No bio provided' }}</p>
+                    <p>Date Of Birth: {{ user.Date_of_birth|default:'No DOB provided' }}</p>
+                    <p>Contact: {{ user.contact_no }}</p>
+                </h4>
+                <h3 style="color:orangered;">Professional Details!</h3>
+                <h4>
+                    <p>Employee ID: {{ user.emp_id|default:'No employee ID provided' }}</p>
+                    <p>Designation: {{ user.designation|default:'No designation provided' }}</p>
+                    <p>Specialization: {{ user.expertise|default:'No expertise provided' }}</p>
+                    <p>Date Of Joining: {{ user.Date_of_joining|default:'No DOJ provided' }}</p>
+                </h4>
+            </div>
+            <div class="modal-footer" style="background-color:navy;">
+                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" style="background-color:navy;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+  <style>
+    .container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow:  0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.text-center {
+  text-align: center;
+  
+}
+
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 20px auto;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.btn-link {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-link:hover {
+  background-color: #0056b3;
+  color: #ddd;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.modal-body {
+  max-width: 900px;
+  margin: 10px;
+  padding: 20px;
+  font-weight: 800;
+  background-color: #ddd;
+  border: 1px solid white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.modal-body p {
+  color: black;
+}
+
+.modal-bdy {
+  max-width: 900px;
+  color: black;
+  font-weight: 800;
+  margin: 10px;
+  padding: 20px;
+  background-color: #ddd;
+  border: 1px solid white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-bdy p {
+  color: black;
+}
+
+.close {
+  color: white;
+  float: right;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.close:hover {
+  background-color: #007bff;
+  color: white;
+  size: 10px;
+}
+
+.modal-header {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  background-color: #007bff;
+  color: #fff;
+  padding:  10px;
+border-top: 1px solid #ddd;
+}
+
+.back-button {
+position: fixed;
+top: 30px;
+left: 5px;
+color: #fff;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-size: 16px;
+margin-top: 40px;
+}
+
+.back-button::before {
+content: "";
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+background-size: 24px 24px;
+background-position: center;
+background-repeat: no-repeat;
+width: 24px;
+height: 24px;
+display: inline-block;
+margin-right: 10px;
+}
+
+.back-button:hover::before {
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+</style>
+{% endblock %}

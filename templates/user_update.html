@@ -1,0 +1,180 @@
+<!-- update_dashboard.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Update Profile {% endblock %}
+
+{% block content %}
+<button><a class="back-button" onclick="location.href='{% url 'user_list' %}'"></a></button>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="background-color:#ddd;color:orangered;">
+                    <h2>Update Profile</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 style="color:navy;">Personal Details</h3>
+                                {{ personal_details_form.as_p }}
+                            </div>
+                            <div class="col-md-12">
+                                <h3 style="color:navy;">Professional Details</h3>
+                                {{ professional_details_form.as_p }}
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                          <div class="col-md-12 text-center">
+                              <button type="submit" class="btn btn-primary" style="background-color:navy; margin:auto;">Update Profile</button>
+                          </div>
+                      </div>     
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard button placed within a full-width column -->
+    <div class="row justify-content-center">
+        <div class="col-md-12"> 
+            <button class="btn btn-primary btn-block" style="background-color:navy;">
+                <a href="{% url 'dashboard' %}" style="text-decoration: none; color: inherit;">Dashboard</a>
+            </button>
+        </div>
+    </div>
+</div>
+
+  <style>
+.container {
+  width: 2000px; 
+  margin-right: 190px;
+  margin-bottom: 20px;
+   
+}
+
+.required:after {
+  content: "*";
+  color: red;
+}
+.card-header {
+  background-color: #f7f7f7; 
+  padding: 10px;
+  border-bottom: 1px solid #ddd; 
+}
+
+h2 {
+  margin-top: 0; 
+  font-weight: bold; 
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.col-md-6 {
+  flex: 0 0 100%; 
+  max-width: 100%; 
+}
+
+h3 {
+  margin-top: 10px; 
+  font-weight: bold;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.form-group{
+    font-size: 12px;
+    font-weight:200;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: large;
+  font-weight: 500;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  flex: 0 0 50%;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc!important;
+  border-radius: 5px;
+  flex: 0 0 50%;
+}
+button[type="submit"] {
+  background-color: #0c89f6!important;
+  color: #fff!important;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding-left: 50px;
+  padding-right: 50px;
+  margin-left: 260px;
+  flex: 0 0 40px;
+}
+
+button[type="submit"]:hover {
+  background-color: #2970ae!important;
+  flex: 0 0 50%;
+}
+
+.btn-primary {
+  background-color: #0584f4!important;
+  color: #fff!important;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  flex: 0 0 50%;
+}
+
+.btn-primary:hover {
+  background-color:  #2970ae!important;
+  flex: 0 0 50%;
+}
+.btn-block{
+  background-color: #0584f4!important;
+  color: #fff!important;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  flex: 0 0 50%;
+}
+.btn-block:hover {
+  background-color:  #2970ae!important;
+  flex: 0 0 50%;
+}
+.back-button {
+  position: fixed;
+  top: 30px;
+  left: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top:40px;
+}
+
+.back-button::before {
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+  background-position: center;
+  background-repeat : no-repeat;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.back-button:hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+}
+</style>
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block content %}
+<button><a class="back-button" onclick="location.href='{% url 'inbox' %}'"></a></button>
+
+    <div class="template-selection-container">
+        <h1 class="template-selection-header">Template Selection</h1>
+        <form id="template-selection-form">
+            <div class="template-category-container">
+                <label for="parent_template_type" class="template-category-label">Template Category:</label>
+                <select id="parent_template_type" name="parent_template_type" class="template-category-select">
+                    <option value="">Select a template category</option>
+                    {% for parent in template_data %}
+                        <option value="{{ parent.parent_type.id }}">{{ parent.parent_type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div id="child_template_types">
+                {% for parent in template_data %}
+                    <div class="child-type-group" data-parent-id="{{ parent.parent_type.id }}" style="display: none;">
+                        <label for="child_template_type_{{ parent.parent_type.id }}" class="child-template-type-label">Child Template Type:</label>
+                        <select id="child_template_type_{{ parent.parent_type.id }}" name="child_template_type" class="child-template-type-select">
+                            <option value="">Select a Template Type</option>
+                            {% for child in parent.child_types %}
+                                <option value="{{ child.id }}">{{ child.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <div class="template-list">
+                            {% for child in parent.child_types %}
+                                <div class="template-group" data-child-id="{{ child.id }}" style="display: none;">
+                                    <label class="template-label">Template:</label>
+                                    <ul class="template-list-ul">
+                                        {% for template in child.templates %}
+                                            <li class="template-list-li">
+                                                <input type="radio" name="template" value="{{ template.id }}" id="template_{{ template.id }}" class="template-radio">
+                                                <label for="template_{{ template.id }}" class="template-label">{{ template.name }}</label>
+                                            </li>
+                                            <div class="template-content" id="content_{{ template.id }}" style="display: none;">
+                                                {{ template.content }}
+                                            </div>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button class="btn btn-secondary template-select-button" type="button" id="select-template">Select Template</button>
+        </form>
+    </div>
+
+<style>
+
+.template-selection-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.template-selection-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.template-category-container {
+    margin-bottom: 20px;
+}
+
+.template-category-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.template-category-select {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.child-type-group {
+    margin-bottom: 20px;
+}
+
+.child-template-type-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.child-template-type-select {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.template-list {
+    margin-bottom: 20px;
+}
+
+.template-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.template-list-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.template-list-li {
+    margin-bottom: 10px;
+}
+
+.template-radio {
+    margin-right: 10px;
+}
+
+.template-content {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.template-select-button {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #337ab7;
+    color: #fff;
+    cursor: pointer;
+}
+
+.template-select-button:hover {
+    background-color: #23527c;
+}
+.back-button {
+    position: fixed;
+    top: 30px;
+    left: 5px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top:40px;
+}
+    
+    .back-button::before {
+      content: "";
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23000080'/%3E%3C/svg%3E");
+      background-size: 24px 24px;
+      background-position: center;
+      background-repeat : no-repeat;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    
+    .back-button:hover::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z' fill='%23ff4500'/%3E%3C/svg%3E");
+    }
+
+</style>
+
+    <script>
+        const parentTemplateTypeSelect = document.getElementById('parent_template_type');
+        const childTypeGroups = document.querySelectorAll('.child-type-group');
+        const childTemplateTypeSelects = document.querySelectorAll('.child-template-type-select');
+
+        parentTemplateTypeSelect.addEventListener('change', () => {
+            const selectedParentId = parentTemplateTypeSelect.value;
+            childTypeGroups.forEach(group => {
+                group.style.display = group.dataset.parentId === selectedParentId ? 'block' : 'none';
+            });
+        });
+
+        childTemplateTypeSelects.forEach(select => {
+            select.addEventListener('change', () => {
+                const selectedChildId = select.value;
+                const templateGroups = select.parentElement.querySelectorAll('.template-group');
+                templateGroups.forEach(group => {
+                    group.style.display = group.dataset.childId === selectedChildId ? 'block' : 'none';
+                });
+            });
+        });
+
+        // Show content when the corresponding radio is selected
+        const radioButtons = document.querySelectorAll('input[name="template"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', () => {
+                const allContents = document.querySelectorAll('.template-content');
+                allContents.forEach(content => content.style.display = 'none'); // Hide all content
+                const currentContent = document.getElementById(`content_${radio.value}`);
+                if (currentContent) {
+                    currentContent.style.display = 'block'; // Show selected content
+                }
+            });
+        });
+// Event listener for the Select Template button
+// Event listener for the Select Template button
+document.getElementById('select-template').addEventListener('click', redirectToEmailForm);
+
+function redirectToEmailForm() {
+  const selectedTemplateId = document.querySelector('input[name="template"]:checked');
+  if (selectedTemplateId) {
+    const selectedTemplateContent = document.getElementById(`content_${selectedTemplateId.value}`).textContent.trim(); // Use trim() to remove whitespace
+    const url = '{% url 'email_form' %}'; // Replace with the actual URL
+    const params = new URLSearchParams({ template_content: selectedTemplateContent });
+    window.location.href = `${url}?${params.toString()}`;
+  } else {
+    console.error('No template selected');
+  }
+}
+    </script>
+{% endblock %}
